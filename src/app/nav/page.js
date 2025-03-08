@@ -4,7 +4,7 @@ import SideMenu from "../side-menu/page";
 import { CgProfile } from "react-icons/cg";
 import { FiSearch } from "react-icons/fi";
 
-const Nav = () => {
+const Nav = ({ children }) => {
   return (
     <div className="flex h-screen flex-col">
       <div className="bg-gray-900 dark:bg-gray-800 p-6 shadow-md flex items-center justify-between">
@@ -35,7 +35,7 @@ const Nav = () => {
         </div>
 
         <div className="flex-1 bg-gray-100 dark:bg-gray-900 p-4">
-          <main></main>
+          <main>{children}</main>
         </div>
       </div>
     </div>
