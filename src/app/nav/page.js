@@ -3,6 +3,14 @@ import Link from "next/link";
 import SideMenu from "../side-menu/page";
 import { CgProfile } from "react-icons/cg";
 import { FiSearch } from "react-icons/fi";
+import {
+  ClerkProvider,
+  SignInButton,
+  SignUpButton,
+  SignedIn,
+  SignedOut,
+  UserButton,
+} from "@clerk/nextjs";
 
 const Nav = ({ children }) => {
   return (
@@ -20,12 +28,16 @@ const Nav = ({ children }) => {
         </div>
 
         <div className="flex items-center space-x-4">
-          <Link
-            href="/profile"
-            className="text-white dark:text-white hover:text-indigo-500 w-[40px] h-[40px] bg-gray-600  flex items-center justify-center rounded-[5px]"
-          >
-            <CgProfile className="w-6 h-6" />
-          </Link>
+          <SignedOut>
+            <SignInButton>
+              <div className="cursor-pointer text-white dark:text-white hover:text-indigo-500 w-[40px] h-[40px] bg-gray-600 flex items-center justify-center rounded-[5px]">
+                <CgProfile className="w-6 h-6" />
+              </div>
+            </SignInButton>
+          </SignedOut>
+          <SignedIn>
+            <UserButton />
+          </SignedIn>
         </div>
       </div>
 

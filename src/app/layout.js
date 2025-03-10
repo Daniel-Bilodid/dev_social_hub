@@ -1,4 +1,13 @@
 import { Geist, Geist_Mono } from "next/font/google";
+import {
+  ClerkProvider,
+  SignInButton,
+  SignUpButton,
+  SignedIn,
+  SignedOut,
+  UserButton,
+} from "@clerk/nextjs";
+
 import "./globals.css";
 import NavPage from "./nav/page";
 
@@ -23,7 +32,9 @@ export default function RootLayout({ children }) {
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <NavPage>{children}</NavPage>
+        <ClerkProvider>
+          <NavPage>{children}</NavPage>
+        </ClerkProvider>
       </body>
     </html>
   );
