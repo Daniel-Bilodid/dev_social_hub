@@ -1,4 +1,6 @@
-import React from "react";
+"use client";
+
+import React, { useEffect } from "react";
 import Link from "next/link";
 import SideMenu from "../side-menu/page";
 import { CgProfile } from "react-icons/cg";
@@ -10,9 +12,20 @@ import {
   SignedIn,
   SignedOut,
   UserButton,
+  useAuth,
 } from "@clerk/nextjs";
 
+import { signIntoFirebaseWithClerk } from "../firebase/page";
+
 const Nav = ({ children }) => {
+  const { getToken, isSignedIn } = useAuth();
+
+  useEffect(() => {
+    if (isSignedIn) {
+      signIntoFirebaseWithClerk(getToken);
+    }
+  }, [isSignedIn]);
+
   return (
     <div className="flex h-screen flex-col">
       <div className="bg-gray-900 dark:bg-gray-800 p-6 shadow-md flex items-center justify-between">
