@@ -3,14 +3,36 @@
 import { React, useState } from "react";
 import Question from "../question/page";
 import AskQuestionPopup from "../questionPopup/page";
+import { getFirestore, collection, addDoc, doc } from "firebase/firestore";
+import { useAuth } from "@clerk/nextjs";
+
 const Questions = () => {
+  const db = getFirestore();
+  const { userId } = useAuth();
   const [popupToggle, setPopupToggle] = useState(false);
   const [questions, setQuestions] = useState([]);
 
-  const addQuestion = (newQuestion) => {
-    setQuestions([...questions, newQuestion]);
+  const addQuestion = async (newQuestion) => {
+    if (!userId) {
+      console.log("User is not signed in.");
+      return;
+    }
+    console.log("im here");
+    try {
+      const userRef = doc(db, "users", userId);
+      const questionsRef = collection(userRef, "posts");
+      console.log("ref", questionsRef);
+      await addDoc(questionsRef, {
+        ...newQuestion,
+        userId: userId,
+        createdAt: new Date(),
+      });
+      console.log("Question added successfully");
+    } catch (error) {
+      console.error("Error adding question:", error);
+    }
   };
-  console.log(questions);
+
   return (
     <div className="flex justify-between w-full">
       <div className="w-full">

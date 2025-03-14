@@ -1,9 +1,7 @@
 "use client";
 import { useAuth } from "@clerk/nextjs";
-import { initializeApp } from "firebase/app";
 import { getAuth, signInWithCustomToken } from "firebase/auth";
-import { getFirestore } from "firebase/firestore";
-import { doc, getDoc } from "firebase/firestore";
+import { initializeApp } from "firebase/app";
 
 const firebaseConfig = {
   apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY,
@@ -17,42 +15,31 @@ const firebaseConfig = {
 
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
-const db = getFirestore();
 
-// Remove this if you do not have Firestore set up
-// for your Firebase app
-const getFirestoreData = async () => {
-  const docRef = doc(db, "example", "example-document");
-  const docSnap = await getDoc(docRef);
-  if (docSnap.exists()) {
-    console.log("Document data:", docSnap.data());
-  } else {
-    // docSnap.data() will be undefined in this case
-    console.log("No such document!");
-  }
-};
 export const signIntoFirebaseWithClerk = async (getToken) => {
-  const token = await getToken({ template: "integration_firebase" });
-
-  const userCredentials = await signInWithCustomToken(auth, token || "");
-  console.log("User:", userCredentials.user);
+  try {
+    const token = await getToken({ template: "integration_firebase" });
+    if (token) {
+      const userCredentials = await signInWithCustomToken(auth, token);
+      console.log("User signed in with Firebase:", userCredentials.user);
+      return userCredentials.user;
+    } else {
+      console.error("No token received from Clerk");
+    }
+  } catch (error) {
+    console.error("Error signing into Firebase with Clerk:", error);
+  }
 };
 
-export default function FirebaseUI() {
-  const { getToken, userId } = useAuth();
-
-  // Handle if the user is not signed in
-  // You could display content, or redirect them to a sign-in page
-  if (!userId) {
-    return <p>You need to sign in with Clerk to access this page.</p>;
+export const authenticateWithClerkAndFirebase = async (getToken) => {
+  try {
+    const token = await getToken({ template: "integration_firebase" });
+    if (token) {
+      await signIntoFirebaseWithClerk(getToken);
+    } else {
+      console.error("No token received from Clerk");
+    }
+  } catch (error) {
+    console.error("Error authenticating:", error);
   }
-
-  return (
-    <main style={{ display: "flex", flexDirection: "column", rowGap: "1rem" }}>
-      <button>Sign in</button>
-
-      {/* Remove this button if you do not have Firestore set up */}
-      <button onClick={getFirestoreData}>Get document</button>
-    </main>
-  );
-}
+};
