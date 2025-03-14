@@ -1,27 +1,42 @@
 "use client";
 
-import { React, useState } from "react";
+import { React, useEffect, useState } from "react";
 import Question from "../question/page";
 import AskQuestionPopup from "../questionPopup/page";
 import { getFirestore, collection, addDoc, doc } from "firebase/firestore";
 import { useAuth } from "@clerk/nextjs";
+import { getQuestions } from "@/utils/getQuestions";
 
 const Questions = () => {
   const db = getFirestore();
-  const { userId } = useAuth();
+  const { userId, user } = useAuth();
   const [popupToggle, setPopupToggle] = useState(false);
-  const [questions, setQuestions] = useState([]);
+  const [usersQuestions, setUsersQuestions] = useState([]);
+
+  const [loading, setLoading] = useState(true);
+  console.log(user);
+  console.log(userId);
+  useEffect(() => {
+    const fetchQuestions = async () => {
+      if (userId) {
+        const questions = await getQuestions(userId);
+        setUsersQuestions(questions || []);
+        setLoading(false);
+      }
+    };
+    fetchQuestions();
+  }, [userId]);
 
   const addQuestion = async (newQuestion) => {
     if (!userId) {
       console.log("User is not signed in.");
       return;
     }
-    console.log("im here");
+
     try {
       const userRef = doc(db, "users", userId);
       const questionsRef = collection(userRef, "posts");
-      console.log("ref", questionsRef);
+
       await addDoc(questionsRef, {
         ...newQuestion,
         userId: userId,
@@ -45,7 +60,7 @@ const Questions = () => {
             Ask a Question
           </button>
         </div>
-        <Question questions={questions} />
+        <Question questions={usersQuestions} />
 
         {popupToggle ? (
           <AskQuestionPopup
