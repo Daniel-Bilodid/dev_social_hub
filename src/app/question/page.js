@@ -15,10 +15,11 @@ const Question = ({ questions, user }) => {
           className="w-full bg-gray-800 p-9 mt-[20px] rounded-[20px]"
           key={question.id}
         >
-          <div className="text-white">{question.question}</div>
+          {console.log(question)}
+          <div className="text-white ">{question.question}</div>
 
           <ul className="flex gap-[10px]">
-            {question.technology.map((technology, index) => {
+            {question?.technology?.map((technology, index) => {
               return (
                 <li key={index} className="decoration-none text-white">
                   {technology.value}
@@ -43,7 +44,7 @@ const Question = ({ questions, user }) => {
                 ? question.createdAt.toDate().toLocaleString()
                 : "No Date"}
             </div>
-            <div>
+            <div className="flex">
               Votes <AiOutlineLike />, Answers <FaRegComment />, Views
               <FaRegEye />
             </div>

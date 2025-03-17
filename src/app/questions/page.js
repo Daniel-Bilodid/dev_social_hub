@@ -21,6 +21,7 @@ const Questions = () => {
     const fetchQuestions = async () => {
       if (userId) {
         const questions = await getQuestions(userId);
+
         setUsersQuestions(questions || []);
         setLoading(false);
       }
@@ -35,10 +36,9 @@ const Questions = () => {
     }
 
     try {
-      const userRef = doc(db, "users", userId);
-      const questionsRef = collection(userRef, "posts");
+      const postsRef = collection(db, "posts");
 
-      await addDoc(questionsRef, {
+      await addDoc(postsRef, {
         ...newQuestion,
         userId: userId,
         createdAt: new Date(),

@@ -1,25 +1,33 @@
-import { getFirestore, collection, getDocs, doc } from "firebase/firestore";
+import {
+  getFirestore,
+  collection,
+  getDocs,
+  query,
+  where,
+} from "firebase/firestore";
 
-export const getQuestions = async (userId) => {
+export const getQuestions = async () => {
   const db = getFirestore();
-  if (!userId) {
-    console.log("User is not signed in.");
-    return;
-  }
 
   try {
-    const userRef = doc(db, "users", userId);
-    const postsRef = collection(userRef, "posts");
+    const postsRef = collection(db, "posts");
 
-    const querySnapshot = await getDocs(postsRef);
-    const posts = querySnapshot.docs.map((doc) => ({
+    const postsSnapshot = await getDocs(postsRef);
+
+    if (postsSnapshot.empty) {
+      console.log("No posts found.");
+      return [];
+    }
+
+    const allPosts = postsSnapshot.docs.map((doc) => ({
       id: doc.id,
       ...doc.data(),
     }));
 
-    console.log("User's posts:", posts);
-    return posts;
+    console.log("All posts fetched:", allPosts);
+    return allPosts;
   } catch (error) {
     console.error("Error getting posts:", error);
+    return [];
   }
 };
