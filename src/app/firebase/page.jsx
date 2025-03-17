@@ -2,6 +2,7 @@
 import { useAuth } from "@clerk/nextjs";
 import { getAuth, signInWithCustomToken } from "firebase/auth";
 import { initializeApp } from "firebase/app";
+import { useEffect } from "react";
 
 const firebaseConfig = {
   apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY,

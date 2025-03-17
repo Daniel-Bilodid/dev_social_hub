@@ -6,16 +6,17 @@ import AskQuestionPopup from "../questionPopup/page";
 import { getFirestore, collection, addDoc, doc } from "firebase/firestore";
 import { useAuth } from "@clerk/nextjs";
 import { getQuestions } from "@/utils/getQuestions";
+import { useUser } from "@clerk/clerk-react";
 
 const Questions = () => {
   const db = getFirestore();
-  const { userId, user } = useAuth();
+  const { userId } = useAuth();
   const [popupToggle, setPopupToggle] = useState(false);
   const [usersQuestions, setUsersQuestions] = useState([]);
-
+  const { user } = useUser();
   const [loading, setLoading] = useState(true);
-  console.log(user);
-  console.log(userId);
+  console.log(user, userId);
+
   useEffect(() => {
     const fetchQuestions = async () => {
       if (userId) {
@@ -60,7 +61,8 @@ const Questions = () => {
             Ask a Question
           </button>
         </div>
-        <Question questions={usersQuestions} />
+        {console.log(usersQuestions)}
+        <Question questions={usersQuestions} user={user} />
 
         {popupToggle ? (
           <AskQuestionPopup

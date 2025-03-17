@@ -1,30 +1,52 @@
 import React from "react";
-
-const Question = ({ questions }) => {
+import Image from "next/image";
+import { AiOutlineLike } from "react-icons/ai";
+import { FaRegComment } from "react-icons/fa";
+import { FaRegEye } from "react-icons/fa";
+const Question = ({ questions, user }) => {
   if (!Array.isArray(questions)) {
     return <div>No questions found</div>;
   }
-  console.log("1", questions);
+
   return (
     <>
-      {questions.map((question) => (
-        <div className="w-full bg-red-50" key={question.id}>
-          <div className="text-black">{question.question}</div>
+      {questions.map((question, index) => (
+        <div
+          className="w-full bg-gray-800 p-9 mt-[20px] rounded-[20px]"
+          key={question.id}
+        >
+          <div className="text-white">{question.question}</div>
 
-          <ul>
-            <li className="decoration-none text-black">
-              {question.technology}
-            </li>
+          <ul className="flex gap-[10px]">
+            {question.technology.map((technology, index) => {
+              return (
+                <li key={index} className="decoration-none text-white">
+                  {technology.value}
+                </li>
+              );
+            })}
           </ul>
 
-          <div className="text-black flex justify-between">
-            <div>
-              User - asked{" "}
+          <div className="text-white flex justify-between">
+            <div className="flex">
+              <div>
+                <Image
+                  src={user.imageUrl}
+                  width={40}
+                  height={40}
+                  className="rounded-full"
+                  alt="user image"
+                />
+              </div>
+              {user?.username} - asked{" "}
               {question.createdAt
                 ? question.createdAt.toDate().toLocaleString()
                 : "No Date"}
             </div>
-            <div>Votes, Answers, Views</div>
+            <div>
+              Votes <AiOutlineLike />, Answers <FaRegComment />, Views
+              <FaRegEye />
+            </div>
           </div>
         </div>
       ))}
