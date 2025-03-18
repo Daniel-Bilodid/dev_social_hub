@@ -2,17 +2,19 @@
 
 import { React, useEffect, useState } from "react";
 import { getQuestions } from "@/utils/getQuestions";
+import { formatDistance } from "date-fns";
+import { useParams } from "next/navigation";
 import Image from "next/image";
 
-const QuestionPage = ({ params }) => {
+const QuestionPage = () => {
   const [usersQuestions, setUsersQuestions] = useState([]);
-
+  const { questionPage } = useParams();
   useEffect(() => {
     const fetchQuestions = async () => {
       const questions = await getQuestions();
 
       setUsersQuestions(
-        questions.find((item) => item.id === params.questionPage) || {}
+        questions.find((item) => item.id === questionPage) || {}
       );
     };
     fetchQuestions();
@@ -20,7 +22,7 @@ const QuestionPage = ({ params }) => {
 
   return (
     <div>
-      <div>
+      <div className="mx-auto w-full max-w-5xl">
         <div className="flex">
           <div>
             {usersQuestions.imageUrl ? (
@@ -36,9 +38,12 @@ const QuestionPage = ({ params }) => {
           <div>
             <div>{usersQuestions?.username}</div>
             <div>
-              {" "}
               {usersQuestions.createdAt
-                ? usersQuestions.createdAt.toDate().toLocaleString()
+                ? formatDistance(
+                    usersQuestions.createdAt.toDate(),
+                    new Date(),
+                    { addSuffix: true }
+                  )
                 : "No Date"}
             </div>
           </div>

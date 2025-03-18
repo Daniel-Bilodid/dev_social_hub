@@ -3,6 +3,7 @@ import Image from "next/image";
 import { AiOutlineLike } from "react-icons/ai";
 import { FaRegComment } from "react-icons/fa";
 import { FaRegEye } from "react-icons/fa";
+import { formatDistance } from "date-fns";
 import Link from "next/link";
 
 const Question = ({ questions, user }) => {
@@ -49,7 +50,9 @@ const Question = ({ questions, user }) => {
               </div>
               {question?.username} - asked{" "}
               {question.createdAt
-                ? question.createdAt.toDate().toLocaleString()
+                ? formatDistance(question.createdAt.toDate(), new Date(), {
+                    addSuffix: true,
+                  })
                 : "No Date"}
             </div>
             <div className="flex">

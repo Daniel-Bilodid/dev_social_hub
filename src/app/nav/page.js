@@ -62,6 +62,8 @@ const Nav = ({ children }) => {
         <div className="flex-1 bg-gray-100 dark:bg-gray-900 p-4">
           <main>{children}</main>
         </div>
+
+        <div className="w-[350px]">Menu</div>
       </div>
     </div>
   );

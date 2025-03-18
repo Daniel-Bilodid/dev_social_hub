@@ -75,7 +75,6 @@ const Questions = () => {
           ""
         )}
       </div>
-      <div className="w-[350px]">Menu</div>
     </div>
   );
 };
