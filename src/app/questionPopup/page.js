@@ -3,12 +3,13 @@ import Select from "react-select";
 const AskQuestionPopup = ({ setPopupToggle, addQuestion }) => {
   const [question, setQuestion] = useState("");
   const [technology, setTechnology] = useState([]);
+  const [text, setText] = useState("");
 
   const handleSubmit = (e) => {
     e.preventDefault();
 
     if (question && technology) {
-      const newQuestion = { question, technology };
+      const newQuestion = { question, technology, text };
       addQuestion(newQuestion);
       setPopupToggle(false);
     }
@@ -33,14 +34,27 @@ const AskQuestionPopup = ({ setPopupToggle, addQuestion }) => {
             <label htmlFor="question" className="block text-white">
               Your Question:
             </label>
+            <input
+              type="text"
+              id="question"
+              placeholder="Ask your question..."
+              value={question}
+              onChange={(e) => setQuestion(e.target.value)}
+              className="w-full px-4 py-2 border border-gray-300 rounded-md"
+            />
+          </div>
+          <div className="mb-4">
+            <label htmlFor="question" className="block text-white">
+              Add more about your question:
+            </label>
             <textarea
               type="text"
               id="question"
               rows="10"
               cols="50"
-              placeholder="Ask your question..."
-              value={question}
-              onChange={(e) => setQuestion(e.target.value)}
+              placeholder="Add more about your question..."
+              value={text}
+              onChange={(e) => setText(e.target.value)}
               className="w-full px-4 py-2 border border-gray-300 rounded-md"
             />
           </div>

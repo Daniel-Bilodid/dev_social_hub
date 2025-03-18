@@ -41,6 +41,8 @@ const Questions = () => {
       await addDoc(postsRef, {
         ...newQuestion,
         userId: userId,
+        username: user.username,
+        imageUrl: user.imageUrl,
         createdAt: new Date(),
       });
       console.log("Question added successfully");
@@ -51,7 +53,7 @@ const Questions = () => {
 
   return (
     <div className="flex justify-between w-full">
-      <div className="w-full">
+      <div className="w-full pl-[4.5em] pr-[4.5em] pt-[1.5em]">
         <div className="flex justify-between">
           <h2 className="text-[20px]">All Questions</h2>
           <button
@@ -61,7 +63,7 @@ const Questions = () => {
             Ask a Question
           </button>
         </div>
-        {console.log(usersQuestions)}
+
         <Question questions={usersQuestions} user={user} />
 
         {popupToggle ? (
