@@ -5,8 +5,7 @@ import { getQuestions } from "@/utils/getQuestions";
 import { formatDistance } from "date-fns";
 import { useParams } from "next/navigation";
 import Image from "next/image";
-import QuestionEditor from "@/components/questionEditor/questionEditor";
-
+import QuestionEditor from "@/components/questionEditor/QuestionEditor";
 const QuestionPage = () => {
   const [usersQuestions, setUsersQuestions] = useState([]);
   const { questionPage } = useParams();
@@ -67,6 +66,7 @@ const QuestionPage = () => {
           )}
         </ul>
       </div>
+      <QuestionEditor />
     </div>
   );
 };
