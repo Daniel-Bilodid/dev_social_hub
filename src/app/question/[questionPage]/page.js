@@ -5,6 +5,7 @@ import { getQuestions } from "@/utils/getQuestions";
 import { formatDistance } from "date-fns";
 import { useParams } from "next/navigation";
 import Image from "next/image";
+import QuestionEditor from "@/components/questionEditor/questionEditor";
 
 const QuestionPage = () => {
   const [usersQuestions, setUsersQuestions] = useState([]);
@@ -49,9 +50,22 @@ const QuestionPage = () => {
           </div>
         </div>
 
-        <div>{usersQuestions?.question}</div>
+        <h2 className="text-[24px]">{usersQuestions?.question}</h2>
 
         <div>{usersQuestions?.text}</div>
+
+        {console.log(usersQuestions)}
+        <ul className="flex gap-[10px]">
+          {usersQuestions?.technology?.length > 0 ? (
+            usersQuestions.technology.map((item) => (
+              <li className="bg-gray-800 p-2 rounded-[10px]" key={item.value}>
+                {item.value}
+              </li>
+            ))
+          ) : (
+            <p>No data available</p>
+          )}
+        </ul>
       </div>
     </div>
   );

@@ -10,6 +10,8 @@
   },
   "dependencies": {
     "@clerk/nextjs": "^6.12.4",
+    "@lexical/react": "^0.28.0",
+    "@lexical/rich-text": "^0.28.0",
     "autoprefixer": "^10.4.20",
     "date-fns": "^4.1.0",
     "firebase": "^11.4.0",
