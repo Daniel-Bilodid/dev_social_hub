@@ -1,28 +1,23 @@
 "use client";
 
+import { useState } from "react";
 import { AutoFocusPlugin } from "@lexical/react/LexicalAutoFocusPlugin";
 import { LexicalComposer } from "@lexical/react/LexicalComposer";
 import { ContentEditable } from "@lexical/react/LexicalContentEditable";
 import { LexicalErrorBoundary } from "@lexical/react/LexicalErrorBoundary";
 import { HistoryPlugin } from "@lexical/react/LexicalHistoryPlugin";
 import { RichTextPlugin } from "@lexical/react/LexicalRichTextPlugin";
-import {
-  $isTextNode,
-  DOMConversionMap,
-  DOMExportOutput,
-  DOMExportOutputMap,
-  isHTMLElement,
-  Klass,
-  LexicalEditor,
-  LexicalNode,
-  ParagraphNode,
-  TextNode,
-} from "lexical";
+import { ParagraphNode, TextNode } from "lexical";
+
+import { CodeNode, CodeHighlightPlugin } from "@lexical/code";
 
 import ExampleTheme from "./ExampleTheme";
 import ToolbarPlugin from "../plugins/ToolbarPlugin";
-import TreeViewPlugin from "../plugins/TreeViewPlugin";
 import { parseAllowedColor, parseAllowedFontSize } from "./styleConfig";
+import OnChangePlugin from "../plugins/OnChangePlugin";
+import { useAuth } from "@clerk/nextjs";
+import { useUser } from "@clerk/clerk-react";
+import { getFirestore, collection, addDoc, doc } from "firebase/firestore";
 
 const placeholder = "Enter some rich text...";
 
@@ -104,7 +99,6 @@ const constructImportMap = () => {
       };
     };
   }
-
   return importMap;
 };
 
@@ -114,14 +108,52 @@ const editorConfig = {
     import: constructImportMap(),
   },
   namespace: "React.js Demo",
-  nodes: [ParagraphNode, TextNode],
+
+  nodes: [ParagraphNode, TextNode, CodeNode],
   onError: (error) => {
     throw error;
   },
   theme: ExampleTheme,
 };
 
-const QuestionEditor = () => {
+const QuestionEditor = ({ postId }) => {
+  const db = getFirestore();
+  const { userId } = useAuth();
+  const { user } = useUser();
+  const [editorContent, setEditorContent] = useState([]);
+
+  const handleEditorChange = (content) => {
+    setEditorContent(content);
+    console.log("Editor content:", content);
+  };
+
+  const handleSubmit = async () => {
+    console.log("Submitted content:", editorContent);
+    console.log("UserID", userId);
+    console.log("username", user.username);
+    console.log("image", user.imageUrl);
+    console.log("postId", postId);
+
+    if (!userId) {
+      console.log("User is not signed in.");
+      return;
+    }
+    try {
+      const postsRef = collection(db, "posts", postId, "responses");
+
+      await addDoc(postsRef, {
+        content: editorContent,
+        userId: userId,
+        username: user.username,
+        imageUrl: user.imageUrl,
+        createdAt: new Date(),
+      });
+      console.log("Question added successfully");
+    } catch (error) {
+      console.error("Error adding question:", error);
+    }
+  };
+
   return (
     <LexicalComposer initialConfig={editorConfig}>
       <div className="editor-container">
@@ -141,7 +173,15 @@ const QuestionEditor = () => {
           />
           <HistoryPlugin />
           <AutoFocusPlugin />
+          <OnChangePlugin onChange={handleEditorChange} />
         </div>
+
+        <button
+          className="cursor-pointer text-gray-900 bg-white border border-gray-300 focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-100 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-gray-800 dark:text-white dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600 dark:focus:ring-gray-700"
+          onClick={handleSubmit}
+        >
+          Submit
+        </button>
       </div>
     </LexicalComposer>
   );

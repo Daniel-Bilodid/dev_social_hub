@@ -66,7 +66,7 @@ const QuestionPage = () => {
           )}
         </ul>
       </div>
-      <QuestionEditor />
+      <QuestionEditor postId={questionPage} />
     </div>
   );
 };
