@@ -31,3 +31,28 @@ export const getQuestions = async () => {
     return [];
   }
 };
+
+export const getResponses = async (postId) => {
+  const db = getFirestore();
+
+  try {
+    const responsesRef = collection(db, "posts", postId, "responses");
+
+    const responsesSnapshot = await getDocs(responsesRef);
+
+    if (responsesSnapshot.empty) {
+      console.log("No responses found.");
+      return [];
+    }
+    const allResponses = responsesSnapshot.docs.map((doc) => ({
+      id: doc.id,
+      ...doc.data(),
+    }));
+
+    console.log("All responses fetched:", allResponses);
+    return allResponses;
+  } catch (error) {
+    console.error("Error getting posts:", error);
+    return [];
+  }
+};

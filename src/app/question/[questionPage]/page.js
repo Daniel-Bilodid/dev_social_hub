@@ -1,14 +1,16 @@
 "use client";
 
 import { React, useEffect, useState } from "react";
-import { getQuestions } from "@/utils/getQuestions";
+import { getQuestions, getResponses } from "@/utils/getQuestions";
 import { formatDistance } from "date-fns";
 import { useParams } from "next/navigation";
 import Image from "next/image";
 import QuestionEditor from "@/components/questionEditor/QuestionEditor";
 const QuestionPage = () => {
   const [usersQuestions, setUsersQuestions] = useState([]);
+  const [usersResponses, setUsersResponses] = useState([]);
   const { questionPage } = useParams();
+
   useEffect(() => {
     const fetchQuestions = async () => {
       const questions = await getQuestions();
@@ -18,8 +20,19 @@ const QuestionPage = () => {
       );
     };
     fetchQuestions();
-  }, []);
+  }, [questionPage]);
 
+  useEffect(() => {
+    const fetchResponses = async () => {
+      const responses = await getResponses(questionPage);
+      console.log("responses1", responses);
+
+      setUsersResponses(responses);
+    };
+    fetchResponses();
+  }, [questionPage]);
+
+  console.log("responses", usersResponses);
   return (
     <div>
       <div className="mx-auto w-full max-w-5xl">
