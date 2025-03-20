@@ -61,11 +61,8 @@ const QuestionPage = () => {
             </div>
           </div>
         </div>
-
         <h2 className="text-[24px]">{usersQuestions?.question}</h2>
-
         <div>{usersQuestions?.text}</div>
-
         {console.log(usersQuestions)}
         <ul className="flex gap-[10px]">
           {usersQuestions?.technology?.length > 0 ? (
@@ -78,7 +75,43 @@ const QuestionPage = () => {
             <p>No data available</p>
           )}
         </ul>
+
+        <div>
+          {usersResponses.map((response) => (
+            <div key={response.userId}>
+              <div>
+                <div className="flex">
+                  <div>
+                    {response.imageUrl ? (
+                      <Image
+                        src={response.imageUrl}
+                        width={40}
+                        height={40}
+                        className="rounded-full"
+                        alt="user image"
+                      />
+                    ) : null}
+                  </div>
+                  <div>
+                    <div>{response?.username}</div>
+                    <div>
+                      {response.createdAt
+                        ? formatDistance(
+                            response.createdAt.toDate(),
+                            new Date(),
+                            { addSuffix: true }
+                          )
+                        : "No Date"}
+                    </div>
+                  </div>
+                </div>
+                <div>{response.content[0].segments[0].text}</div>
+              </div>
+            </div>
+          ))}
+        </div>
       </div>
+
       <QuestionEditor postId={questionPage} />
     </div>
   );
