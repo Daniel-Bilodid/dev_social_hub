@@ -75,23 +75,26 @@ const QuestionPage = () => {
             <p>No data available</p>
           )}
         </ul>
-
+        {console.log(usersResponses)}
         <div>
-          {usersResponses.map((response) => (
-            <div key={response.userId}>
+          {usersResponses.map((response, index) => (
+            <div key={index}>
               <div>
                 <div className="flex">
+                  {/* User Image */}
                   <div>
-                    {response.imageUrl ? (
+                    {response.imageUrl && (
                       <Image
                         src={response.imageUrl}
                         width={40}
                         height={40}
                         className="rounded-full"
-                        alt="user image"
+                        alt="User image"
                       />
-                    ) : null}
+                    )}
                   </div>
+
+                  {/* Username and Timestamp */}
                   <div>
                     <div>{response?.username}</div>
                     <div>
@@ -99,13 +102,33 @@ const QuestionPage = () => {
                         ? formatDistance(
                             response.createdAt.toDate(),
                             new Date(),
-                            { addSuffix: true }
+                            {
+                              addSuffix: true,
+                            }
                           )
                         : "No Date"}
                     </div>
                   </div>
                 </div>
-                <div>{response.content[0].segments[0].text}</div>
+
+                {/* Formatted Text Output */}
+                <div>
+                  {response.content?.[0]?.segments?.map((segment, index) => {
+                    // Construct className dynamically based on format
+                    const className = `
+            ${segment.format?.bold ? "font-bold" : ""}
+            ${segment.format?.underline ? "underline" : ""}
+            ${segment.format?.italic ? "italic" : ""}
+            ${segment.format?.strikethrough ? "line-through" : ""}
+          `.trim();
+
+                    return (
+                      <span key={index} className={className}>
+                        {segment.text}
+                      </span>
+                    );
+                  }) || <p>No content available</p>}
+                </div>
               </div>
             </div>
           ))}
