@@ -38,6 +38,8 @@ const InsertCodeButton = () => {
       codeNode.append(paragraph);
       root.append(codeNode);
     });
+    const editorState = editor.getEditorState().toJSON();
+    console.log("Editor state after inserting code block:", editorState);
   };
 
   return (
@@ -120,6 +122,7 @@ const QuestionEditor = ({ postId }) => {
           <OnChangePlugin onChange={handleEditorChange} />
         </div>
 
+        {/* Insert Code Button */}
         <InsertCodeButton />
 
         <button
