@@ -81,7 +81,6 @@ const QuestionPage = () => {
             <div key={index}>
               <div>
                 <div className="flex">
-                  {/* User Image */}
                   <div>
                     {response.imageUrl && (
                       <Image
@@ -94,7 +93,6 @@ const QuestionPage = () => {
                     )}
                   </div>
 
-                  {/* Username and Timestamp */}
                   <div>
                     <div>{response?.username}</div>
                     <div>
@@ -111,10 +109,8 @@ const QuestionPage = () => {
                   </div>
                 </div>
 
-                {/* Formatted Text Output */}
                 <div>
                   {response.content?.[0]?.segments?.map((segment, index) => {
-                    // Construct className dynamically based on format
                     const className = `
             ${segment.format?.bold ? "font-bold" : ""}
             ${segment.format?.underline ? "underline" : ""}

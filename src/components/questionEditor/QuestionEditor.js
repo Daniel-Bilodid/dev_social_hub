@@ -28,7 +28,7 @@ const placeholder = "Enter some rich text...";
 
 const InsertCodeButton = () => {
   const [editor] = useLexicalComposerContext();
-
+  let editorState;
   const insertCodeBlock = () => {
     editor.update(() => {
       const root = $getRoot();
@@ -38,10 +38,28 @@ const InsertCodeButton = () => {
       codeNode.append(paragraph);
       root.append(codeNode);
     });
-    const editorState = editor.getEditorState().toJSON();
+    editorState = editor.getEditorState().toJSON();
     console.log("Editor state after inserting code block:", editorState);
   };
+  const extractCodeFromEditorState = (editorState) => {
+    try {
+      const rootChildren = editorState.root.children;
 
+      const codeBlocks = rootChildren.filter((node) => node.type === "code");
+
+      return codeBlocks
+        .map((codeBlock) => {
+          return codeBlock.children
+            .map((child) => (child.text ? child.text : "\n"))
+            .join("");
+        })
+        .join("\n\n");
+    } catch (error) {
+      console.error("Error extracting code:", error);
+      return "";
+    }
+  };
+  const extractedCode = extractCodeFromEditorState(editorState);
   return (
     <button
       className="bg-blue-500 text-white px-3 py-1 rounded-md mt-2 hover:bg-blue-600"
@@ -69,7 +87,6 @@ const QuestionEditor = ({ postId }) => {
 
   const handleEditorChange = (content) => {
     setEditorContent(content);
-    console.log("Editor content:", content);
   };
 
   const handleSubmit = async () => {
@@ -84,16 +101,23 @@ const QuestionEditor = ({ postId }) => {
       return;
     }
 
+    if (editorContent[0].segments) {
+      console.log("Cant submit an empty response!");
+      return;
+    }
+
     try {
       const postsRef = collection(db, "posts", postId, "responses");
 
       await addDoc(postsRef, {
         content: editorContent,
+        code: extractedCode || "",
         userId: userId,
         username: user?.username,
         imageUrl: user?.imageUrl,
         createdAt: new Date(),
       });
+
       console.log("Question added successfully");
     } catch (error) {
       console.error("Error adding question:", error);

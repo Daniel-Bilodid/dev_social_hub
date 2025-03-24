@@ -16,16 +16,16 @@ const Questions = () => {
   const { user } = useUser();
   const [loading, setLoading] = useState(true);
   console.log(user, userId);
+  const fetchQuestions = async () => {
+    if (userId) {
+      const questions = await getQuestions(userId);
 
+      setUsersQuestions(questions || []);
+      setLoading(false);
+      console.log(usersQuestions);
+    }
+  };
   useEffect(() => {
-    const fetchQuestions = async () => {
-      if (userId) {
-        const questions = await getQuestions(userId);
-
-        setUsersQuestions(questions || []);
-        setLoading(false);
-      }
-    };
     fetchQuestions();
   }, [userId]);
 
@@ -46,6 +46,7 @@ const Questions = () => {
         createdAt: new Date(),
       });
       console.log("Question added successfully");
+      fetchQuestions();
     } catch (error) {
       console.error("Error adding question:", error);
     }
@@ -56,6 +57,7 @@ const Questions = () => {
       <div className="w-full pl-[4.5em] pr-[4.5em] pt-[1.5em]">
         <div className="flex justify-between">
           <h2 className="text-[20px]">All Questions</h2>
+
           <button
             onClick={() => setPopupToggle(true)}
             className="bg-gray-600 text-white px-6 py-2 rounded-md text-lg font-medium hover:bg-indigo-500 transition-all cursor-pointer"
