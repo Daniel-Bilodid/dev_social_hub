@@ -1,6 +1,6 @@
 "use client";
 
-import { React, useEffect, useState } from "react";
+import { React, useEffect, useState, useCallback } from "react";
 import { getQuestions, getResponses } from "@/utils/getQuestions";
 import { formatDistance } from "date-fns";
 import { useParams } from "next/navigation";
@@ -22,17 +22,19 @@ const QuestionPage = () => {
     fetchQuestions();
   }, [questionPage]);
 
-  useEffect(() => {
-    const fetchResponses = async () => {
-      const responses = await getResponses(questionPage);
-      console.log("responses1", responses);
-
-      setUsersResponses(responses);
-    };
-    fetchResponses();
+  const fetchResponses = useCallback(async () => {
+    const responses = await getResponses(questionPage);
+    setUsersResponses(responses);
   }, [questionPage]);
 
-  console.log("responses", usersResponses);
+  useEffect(() => {
+    fetchResponses();
+  }, [fetchResponses]);
+
+  const handleNewResponse = () => {
+    fetchResponses();
+  };
+
   return (
     <div>
       <div className="mx-auto w-full max-w-5xl">
@@ -63,7 +65,7 @@ const QuestionPage = () => {
         </div>
         <h2 className="text-[24px]">{usersQuestions?.question}</h2>
         <div>{usersQuestions?.text}</div>
-        {console.log(usersQuestions)}
+
         <ul className="flex gap-[10px]">
           {usersQuestions?.technology?.length > 0 ? (
             usersQuestions.technology.map((item) => (
@@ -75,7 +77,7 @@ const QuestionPage = () => {
             <p>No data available</p>
           )}
         </ul>
-        {console.log(usersResponses)}
+
         <div>
           {usersResponses.map((response, index) => (
             <div key={index}>
@@ -131,7 +133,7 @@ const QuestionPage = () => {
         </div>
       </div>
 
-      <QuestionEditor postId={questionPage} />
+      <QuestionEditor postId={questionPage} onNewResponse={handleNewResponse} />
     </div>
   );
 };

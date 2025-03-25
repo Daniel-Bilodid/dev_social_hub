@@ -41,25 +41,7 @@ const InsertCodeButton = () => {
     editorState = editor.getEditorState().toJSON();
     console.log("Editor state after inserting code block:", editorState);
   };
-  const extractCodeFromEditorState = (editorState) => {
-    try {
-      const rootChildren = editorState.root.children;
 
-      const codeBlocks = rootChildren.filter((node) => node.type === "code");
-
-      return codeBlocks
-        .map((codeBlock) => {
-          return codeBlock.children
-            .map((child) => (child.text ? child.text : "\n"))
-            .join("");
-        })
-        .join("\n\n");
-    } catch (error) {
-      console.error("Error extracting code:", error);
-      return "";
-    }
-  };
-  const extractedCode = extractCodeFromEditorState(editorState);
   return (
     <button
       className="bg-blue-500 text-white px-3 py-1 rounded-md mt-2 hover:bg-blue-600"
@@ -79,7 +61,7 @@ const editorConfig = {
   theme: ExampleTheme,
 };
 
-const QuestionEditor = ({ postId }) => {
+const QuestionEditor = ({ postId, onNewResponse }) => {
   const db = getFirestore();
   const { userId } = useAuth();
   const { user } = useUser();
@@ -101,17 +83,12 @@ const QuestionEditor = ({ postId }) => {
       return;
     }
 
-    if (editorContent[0].segments) {
-      console.log("Cant submit an empty response!");
-      return;
-    }
-
     try {
       const postsRef = collection(db, "posts", postId, "responses");
 
       await addDoc(postsRef, {
         content: editorContent,
-        code: extractedCode || "",
+
         userId: userId,
         username: user?.username,
         imageUrl: user?.imageUrl,
@@ -119,6 +96,7 @@ const QuestionEditor = ({ postId }) => {
       });
 
       console.log("Question added successfully");
+      onNewResponse();
     } catch (error) {
       console.error("Error adding question:", error);
     }
