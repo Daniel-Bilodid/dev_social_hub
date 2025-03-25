@@ -6,6 +6,8 @@ import { formatDistance } from "date-fns";
 import { useParams } from "next/navigation";
 import Image from "next/image";
 import QuestionEditor from "@/components/questionEditor/QuestionEditor";
+
+import UserLikes from "@/components/UserLikes";
 const QuestionPage = () => {
   const [usersQuestions, setUsersQuestions] = useState([]);
   const [usersResponses, setUsersResponses] = useState([]);
@@ -38,30 +40,33 @@ const QuestionPage = () => {
   return (
     <div>
       <div className="mx-auto w-full max-w-5xl">
-        <div className="flex">
-          <div>
-            {usersQuestions.imageUrl ? (
-              <Image
-                src={usersQuestions.imageUrl}
-                width={40}
-                height={40}
-                className="rounded-full"
-                alt="user image"
-              />
-            ) : null}
-          </div>
-          <div>
-            <div>{usersQuestions?.username}</div>
+        <div className="flex justify-between">
+          <div className="flex">
             <div>
-              {usersQuestions.createdAt
-                ? formatDistance(
-                    usersQuestions.createdAt.toDate(),
-                    new Date(),
-                    { addSuffix: true }
-                  )
-                : "No Date"}
+              {usersQuestions.imageUrl ? (
+                <Image
+                  src={usersQuestions.imageUrl}
+                  width={40}
+                  height={40}
+                  className="rounded-full"
+                  alt="user image"
+                />
+              ) : null}
+            </div>
+            <div>
+              <div>{usersQuestions?.username}</div>
+              <div>
+                {usersQuestions.createdAt
+                  ? formatDistance(
+                      usersQuestions.createdAt.toDate(),
+                      new Date(),
+                      { addSuffix: true }
+                    )
+                  : "No Date"}
+              </div>
             </div>
           </div>
+          <UserLikes />
         </div>
         <h2 className="text-[24px]">{usersQuestions?.question}</h2>
         <div>{usersQuestions?.text}</div>

@@ -14,6 +14,7 @@ import {
   UserButton,
   useAuth,
 } from "@clerk/nextjs";
+import NavMenu from "./navMenu";
 
 import { signIntoFirebaseWithClerk } from "../firebase/page";
 
@@ -63,7 +64,9 @@ const Nav = ({ children }) => {
           <main>{children}</main>
         </div>
 
-        <div className="w-[350px]">Menu</div>
+        <div className="w-[350px] bg-gray-800">
+          <NavMenu />
+        </div>
       </div>
     </div>
   );
