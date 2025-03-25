@@ -1,12 +1,13 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { AutoFocusPlugin } from "@lexical/react/LexicalAutoFocusPlugin";
 import { LexicalComposer } from "@lexical/react/LexicalComposer";
 import { ContentEditable } from "@lexical/react/LexicalContentEditable";
 import { LexicalErrorBoundary } from "@lexical/react/LexicalErrorBoundary";
 import { HistoryPlugin } from "@lexical/react/LexicalHistoryPlugin";
 import { RichTextPlugin } from "@lexical/react/LexicalRichTextPlugin";
+
 import {
   ParagraphNode,
   TextNode,
@@ -28,7 +29,17 @@ const placeholder = "Enter some rich text...";
 
 const InsertCodeButton = () => {
   const [editor] = useLexicalComposerContext();
-  let editorState;
+  const [currentEditorState, setCurrentEditorState] = useState(null);
+
+  useEffect(() => {
+    const unregister = editor.registerUpdateListener(({ editorState }) => {
+      setCurrentEditorState(editorState.toJSON());
+    });
+    return () => {
+      unregister();
+    };
+  }, [editor]);
+
   const insertCodeBlock = () => {
     editor.update(() => {
       const root = $getRoot();
@@ -38,17 +49,28 @@ const InsertCodeButton = () => {
       codeNode.append(paragraph);
       root.append(codeNode);
     });
-    editorState = editor.getEditorState().toJSON();
-    console.log("Editor state after inserting code block:", editorState);
+
+    console.log(
+      "Editor state after inserting code block:",
+      editor.getEditorState().toJSON()
+    );
   };
 
   return (
-    <button
-      className="bg-blue-500 text-white px-3 py-1 rounded-md mt-2 hover:bg-blue-600"
-      onClick={insertCodeBlock}
-    >
-      Insert Code Block
-    </button>
+    <>
+      <button
+        className="bg-blue-500 text-white px-3 py-1 rounded-md mt-2 hover:bg-blue-600"
+        onClick={insertCodeBlock}
+      >
+        Insert Code Block
+      </button>
+      <button
+        className="cursor-pointer text-gray-900 bg-white border border-gray-300 focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-100 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2"
+        onClick={() => console.log(currentEditorState)}
+      >
+        Check Editor State
+      </button>
+    </>
   );
 };
 

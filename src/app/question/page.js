@@ -1,12 +1,26 @@
-import React, { useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import Image from "next/image";
 import { AiOutlineLike } from "react-icons/ai";
 import { FaRegComment } from "react-icons/fa";
 import { FaRegEye } from "react-icons/fa";
 import { formatDistance } from "date-fns";
 import Link from "next/link";
+import { getResponses } from "@/utils/getQuestions";
 
 const Question = ({ questions, user }) => {
+  const [responses, setResponses] = useState([]);
+
+  useEffect(() => {
+    async function fetchResponses() {
+      const fetchedResponses = await Promise.all(
+        questions.map((q) => getResponses(q.id))
+      );
+      setResponses(fetchedResponses);
+    }
+
+    fetchResponses();
+  }, [questions]);
+
   if (!Array.isArray(questions)) {
     return <div>No questions found</div>;
   }
@@ -19,7 +33,6 @@ const Question = ({ questions, user }) => {
  mt-[20px] rounded-[20px]"
           key={question.id}
         >
-          {console.log(question)}
           <Link href={`/question/${question.id}`} className="text-white ">
             {question.question}
           </Link>
@@ -56,8 +69,9 @@ const Question = ({ questions, user }) => {
                 : "No Date"}
             </div>
             <div className="flex">
-              Votes <AiOutlineLike />, Answers <FaRegComment />, Views
-              <FaRegEye />
+              Votes <AiOutlineLike />,
+              {responses ? responses[index]?.length : "0"} Answers{" "}
+              <FaRegComment />
             </div>
           </div>
         </div>

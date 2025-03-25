@@ -112,20 +112,32 @@ const QuestionPage = () => {
                 </div>
 
                 <div>
-                  {response.content?.[0]?.segments?.map((segment, index) => {
-                    const className = `
+                  {response.content.length > 0 ? (
+                    response.content.map((content, index) => (
+                      <div key={index}>
+                        {content?.segments?.length > 0 ? (
+                          content.segments.map((segment, segIndex) => {
+                            const className = `
             ${segment.format?.bold ? "font-bold" : ""}
             ${segment.format?.underline ? "underline" : ""}
             ${segment.format?.italic ? "italic" : ""}
             ${segment.format?.strikethrough ? "line-through" : ""}
           `.trim();
 
-                    return (
-                      <span key={index} className={className}>
-                        {segment.text}
-                      </span>
-                    );
-                  }) || <p>No content available</p>}
+                            return (
+                              <span key={segIndex} className={className}>
+                                {segment.text}
+                              </span>
+                            );
+                          })
+                        ) : (
+                          <p>No segments available</p>
+                        )}
+                      </div>
+                    ))
+                  ) : (
+                    <p>No content available</p>
+                  )}
                 </div>
               </div>
             </div>
