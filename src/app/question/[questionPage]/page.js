@@ -66,7 +66,7 @@ const QuestionPage = () => {
               </div>
             </div>
           </div>
-          <UserLikes />
+          <UserLikes postId={questionPage} />
         </div>
         <h2 className="text-[24px]">{usersQuestions?.question}</h2>
         <div>{usersQuestions?.text}</div>

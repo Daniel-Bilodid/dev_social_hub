@@ -23,8 +23,8 @@ const SideMenu = () => {
           </Link>
         </li>
         <li>
-          <Link href="/users" className="hover:text-blue-400">
-            Users
+          <Link href="/community" className="hover:text-blue-400">
+            Community
           </Link>
         </li>
       </ul>
