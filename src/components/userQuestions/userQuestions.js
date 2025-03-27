@@ -6,6 +6,7 @@ import QuestionComponent from "../questionComponent/QuestionComponent";
 import { getResponses } from "@/utils/getQuestions";
 import ToggleButton from "@mui/material/ToggleButton";
 import ToggleButtonGroup from "@mui/material/ToggleButtonGroup";
+import ResponsesComponent from "../responsesComponent/responsesComponent";
 
 const UserQuestions = ({ userId }) => {
   const [filteredQuestions, setFilteredQuestions] = useState([]);
@@ -32,18 +33,20 @@ const UserQuestions = ({ userId }) => {
 
     const filtered = (questions || []).filter((item) => item.userId === userId);
     setFilteredQuestions(filtered);
-
-    const filteredResponse = (responses || []).filter(
+  };
+  useEffect(() => {
+    const flattenedResponses = responses.flat();
+    const filteredResponse = flattenedResponses.filter(
       (item) => item.userId === userId
     );
     setFilteredResponses(filteredResponse);
-  };
-
+  }, [responses, userId]);
   useEffect(() => {
     fetchQuestions();
   }, []);
-  console.log(responses);
-  console.log(filteredResponses);
+
+  console.log("here", filteredResponses);
+
   return (
     <div>
       <ToggleButtonGroup
@@ -63,7 +66,7 @@ const UserQuestions = ({ userId }) => {
           responses={responses}
         />
       ) : (
-        ""
+        <ResponsesComponent usersResponses={filteredResponses} />
       )}
     </div>
   );

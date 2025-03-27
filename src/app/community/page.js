@@ -4,6 +4,7 @@ import React from "react";
 import { clerkClient } from "@clerk/nextjs/server";
 import Link from "next/link";
 import Image from "next/image";
+import SearchInput from "@/components/searchInput/SearchInput";
 
 export default async function CommunityPage() {
   try {
@@ -15,12 +16,6 @@ export default async function CommunityPage() {
     return (
       <div>
         <h1>Community page</h1>
-
-        <input
-          type="text"
-          placeholder="Search for user"
-          className="w-full px-10 py-2 rounded-md border border-gray-600 dark:bg-gray-700 dark:text-white placeholder-gray-400"
-        />
 
         <div className="flex flex-wrap mt-12 justify-center">
           <ul className="flex gap-4">
