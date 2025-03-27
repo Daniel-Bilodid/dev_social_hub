@@ -8,17 +8,17 @@ import UserQuestions from "@/components/userQuestions/userQuestions";
 export default async function UserPage({ params }) {
   try {
     const clerk = await clerkClient();
+    const { user } = await params;
+    const userInfo = await clerk.users.getUser(user);
 
-    const user = await clerk.users.getUser(params.user);
+    const date = new Date(userInfo.createdAt);
 
-    const date = new Date(user.createdAt);
-    console.log(date);
     return (
       <div>
         <div className="flex">
-          {user.imageUrl && (
+          {userInfo.imageUrl && (
             <Image
-              src={user.imageUrl}
+              src={userInfo.imageUrl}
               width={100}
               height={100}
               className="rounded-full"
@@ -28,10 +28,10 @@ export default async function UserPage({ params }) {
 
           <div className="flex flex-col">
             <div className="flex gap-1">
-              <span>{user.firstName}</span>
-              <span> {user.lastName}</span>
+              <span>{userInfo.firstName}</span>
+              <span> {userInfo.lastName}</span>
             </div>
-            <span>@{user.username}</span>
+            <span>@{userInfo.username}</span>
             <div className="flex gap-1">
               {" "}
               <FaRegCalendarAlt />
@@ -46,7 +46,7 @@ export default async function UserPage({ params }) {
 
         <div>Top Questions</div>
         <div>
-          <UserQuestions userId={params.slug} />
+          <UserQuestions userId={user} />
         </div>
       </div>
     );

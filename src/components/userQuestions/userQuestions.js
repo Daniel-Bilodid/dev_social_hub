@@ -2,32 +2,71 @@
 
 import React, { useState, useEffect } from "react";
 import { getQuestions } from "@/utils/getQuestions";
+import QuestionComponent from "../questionComponent/QuestionComponent";
+import { getResponses } from "@/utils/getQuestions";
+import ToggleButton from "@mui/material/ToggleButton";
+import ToggleButtonGroup from "@mui/material/ToggleButtonGroup";
 
 const UserQuestions = ({ userId }) => {
-  const [userQuestions, setUsersQuestions] = useState([]);
   const [filteredQuestions, setFilteredQuestions] = useState([]);
+  const [filteredResponses, setFilteredResponses] = useState([]);
+  const [responses, setResponses] = useState([]);
+  const [alignment, setAlignment] = React.useState("topQuestions");
+
+  const handleChange = (event, newAlignment) => {
+    setAlignment(newAlignment);
+  };
+  useEffect(() => {
+    async function fetchResponses() {
+      const fetchedResponses = await Promise.all(
+        filteredQuestions.map((q) => getResponses(q.id))
+      );
+      setResponses(fetchedResponses);
+    }
+
+    fetchResponses();
+  }, [filteredQuestions]);
 
   const fetchQuestions = async () => {
     const questions = await getQuestions();
 
-    setUsersQuestions(questions || []);
-
-    console.log("user questions", userQuestions);
-    const filtered = questions.filter((item) => item.userId === userId);
-    console.log("Filtered questions:", filtered);
+    const filtered = (questions || []).filter((item) => item.userId === userId);
     setFilteredQuestions(filtered);
+
+    const filteredResponse = (responses || []).filter(
+      (item) => item.userId === userId
+    );
+    setFilteredResponses(filteredResponse);
   };
+
   useEffect(() => {
     fetchQuestions();
   }, []);
-  useEffect(() => {
-    console.log("filteredQuestions updated:", filteredQuestions);
+  console.log(responses);
+  console.log(filteredResponses);
+  return (
+    <div>
+      <ToggleButtonGroup
+        color="primary"
+        value={alignment}
+        exclusive
+        onChange={handleChange}
+        aria-label="Platform"
+      >
+        <ToggleButton value="topQuestions">Top Questions</ToggleButton>
+        <ToggleButton value="answers">Answers</ToggleButton>
+      </ToggleButtonGroup>
 
-    console.log("userQuestions updated:", userQuestions);
-    console.log("userId", userId);
-  }, [filteredQuestions, userQuestions, userId]);
-
-  return <div>UserQuestions</div>;
+      {alignment === "topQuestions" ? (
+        <QuestionComponent
+          questions={filteredQuestions}
+          responses={responses}
+        />
+      ) : (
+        ""
+      )}
+    </div>
+  );
 };
 
 export default UserQuestions;
