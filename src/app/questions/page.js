@@ -7,12 +7,14 @@ import { getFirestore, collection, addDoc, doc } from "firebase/firestore";
 import { useAuth } from "@clerk/nextjs";
 import { getQuestions } from "@/utils/getQuestions";
 import { useUser } from "@clerk/clerk-react";
+import SearchInput from "@/components/searchInput/SearchInput";
 
 const Questions = () => {
   const db = getFirestore();
   const { userId } = useAuth();
   const [popupToggle, setPopupToggle] = useState(false);
   const [usersQuestions, setUsersQuestions] = useState([]);
+  const [usersFilteredQuestions, setUsersFilteredQuestions] = useState([]);
   const { user } = useUser();
   const [loading, setLoading] = useState(true);
   console.log(user, userId);
@@ -28,6 +30,9 @@ const Questions = () => {
   useEffect(() => {
     fetchQuestions();
   }, [userId]);
+  useEffect(() => {
+    setUsersFilteredQuestions(usersQuestions);
+  }, [usersQuestions]);
 
   const addQuestion = async (newQuestion) => {
     if (!userId) {
@@ -55,18 +60,25 @@ const Questions = () => {
   return (
     <div className="flex justify-between w-full">
       <div className="w-full pl-[4.5em] pr-[4.5em] pt-[1.5em]">
-        <div className="flex justify-between">
-          <h2 className="text-[20px]">All Questions</h2>
+        <div className="flex justify-between flex-col">
+          <div className="flex justify-between">
+            <h2 className="text-[20px]">All Questions</h2>
 
-          <button
-            onClick={() => setPopupToggle(true)}
-            className="bg-gray-600 text-white px-6 py-2 rounded-md text-lg font-medium hover:bg-indigo-500 transition-all cursor-pointer"
-          >
-            Ask a Question
-          </button>
+            <button
+              onClick={() => setPopupToggle(true)}
+              className="bg-gray-600 text-white px-6 py-2 rounded-md text-lg font-medium hover:bg-indigo-500 transition-all cursor-pointer "
+            >
+              Ask a Question
+            </button>
+          </div>
+          <SearchInput
+            usersQuestions={usersQuestions}
+            usersFilteredQuestions={usersFilteredQuestions}
+            setUsersFilteredQuestions={setUsersFilteredQuestions}
+          />
         </div>
 
-        <Question questions={usersQuestions} user={user} />
+        <Question questions={usersFilteredQuestions} user={user} />
 
         {popupToggle ? (
           <AskQuestionPopup

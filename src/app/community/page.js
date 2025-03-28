@@ -4,7 +4,6 @@ import React from "react";
 import { clerkClient } from "@clerk/nextjs/server";
 import Link from "next/link";
 import Image from "next/image";
-import SearchInput from "@/components/searchInput/SearchInput";
 
 export default async function CommunityPage() {
   try {

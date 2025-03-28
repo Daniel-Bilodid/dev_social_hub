@@ -1,22 +1,30 @@
-"use client";
+import React from "react";
 
-import React, { useState } from "react";
+const SearchInput = ({
+  usersQuestions,
+  usersFilteredQuestions,
+  setUsersFilteredQuestions,
+}) => {
+  function handleSearch(e) {
+    const query = e.target.value.toLowerCase();
+    if (!query) {
+      setUsersFilteredQuestions(usersQuestions);
+      return;
+    }
 
-const SearchInput = ({ onSearch }) => {
-  const [search, setSearch] = useState("");
+    const filtered = usersQuestions.filter((item) =>
+      item.question?.toLowerCase().includes(query)
+    );
 
-  function handleInput(e) {
-    setSearch(e.target.value);
-    onSearch(e.target.value);
+    setUsersFilteredQuestions(filtered);
   }
 
   return (
     <input
       type="text"
-      placeholder="Search for user"
-      className="w-full px-10 py-2 rounded-md border border-gray-600 dark:bg-gray-700 dark:text-white placeholder-gray-400"
-      onChange={handleInput}
-      value={search}
+      placeholder="Search questions..."
+      className="border p-2 rounded"
+      onChange={(e) => handleSearch(e)}
     />
   );
 };
