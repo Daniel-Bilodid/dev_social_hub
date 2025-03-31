@@ -2,46 +2,23 @@
 
 import React from "react";
 import { clerkClient } from "@clerk/nextjs/server";
-import Link from "next/link";
-import Image from "next/image";
+
+import UsersList from "@/components/usersList/UsersList";
 
 export default async function CommunityPage() {
   try {
     const clerk = await clerkClient();
 
     const users = await clerk.users.getUserList();
+    const plainUsers = JSON.parse(JSON.stringify(users));
     console.log(users.data);
 
     return (
       <div>
-        <h1>Community page</h1>
+        <h1>All users</h1>
 
         <div className="flex flex-wrap mt-12 justify-center">
-          <ul className="flex gap-4">
-            {users.data.map((user) => (
-              <Link
-                className="w-[260px] p-8 flex flex-col items-center justify-center rounded-2xl border bg-gray-800"
-                href={`/community/${user.id}`}
-                key={user.id}
-              >
-                {user.imageUrl && (
-                  <Image
-                    src={user.imageUrl}
-                    width={100}
-                    height={100}
-                    className="rounded-full"
-                    alt="User image"
-                  />
-                )}
-
-                <h2>
-                  {user.firstName ?? "Unknown name"} {user.lastName}
-                </h2>
-
-                <span>@{user.username}</span>
-              </Link>
-            ))}
-          </ul>
+          <UsersList users={plainUsers} />
         </div>
       </div>
     );
