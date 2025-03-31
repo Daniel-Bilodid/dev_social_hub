@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Box from "@mui/material/Box";
 import TextField from "@mui/material/TextField";
 import InputLabel from "@mui/material/InputLabel";
@@ -13,23 +13,31 @@ const CommunityHandlers = ({
   usersFilteredList,
   setUsersFilteredList,
 }) => {
-  const [age, setAge] = useState("");
+  const [filtered, setFiltered] = useState("");
 
   const handleChange = (event) => {
-    setAge(event.target.value);
+    setFiltered(event.target.value);
+
+    const sortedUsers = [...usersFilteredList].sort((a, b) =>
+      event.target.value === "old-user"
+        ? a.createdAt - b.createdAt
+        : b.createdAt - a.createdAt
+    );
+
+    setUsersFilteredList(sortedUsers);
   };
 
   function handleSearch(e) {
-    console.log(e.target.value);
-    console.log("list", usersList);
     const query = e.target.value.toLowerCase();
     if (!query) {
       setUsersFilteredList(usersList);
       return;
     }
 
-    const filtered = usersList.filter((user) =>
-      (user.firstName || "").toLowerCase().includes(query)
+    const filtered = usersList.filter(
+      (user) =>
+        (user.firstName || "").toLowerCase().includes(query) ||
+        (user.lastName || "").toLowerCase().includes(query)
     );
 
     console.log("filter", filtered);
@@ -52,17 +60,17 @@ const CommunityHandlers = ({
         />
 
         <FormControl fullWidth>
-          <InputLabel id="demo-simple-select-label">Age</InputLabel>
+          <InputLabel id="demo-simple-select-label">Select a Filter</InputLabel>
           <Select
             labelId="demo-simple-select-label"
             id="demo-simple-select"
-            value={age}
-            label="Age"
+            value={filtered}
+            label="Filter"
             onChange={handleChange}
           >
-            <MenuItem value={10}>Ten</MenuItem>
-            <MenuItem value={20}>Twenty</MenuItem>
-            <MenuItem value={30}>Thirty</MenuItem>
+            <MenuItem value={"new-user"}>New Users</MenuItem>
+            <MenuItem value={"old-user"}>Old Users</MenuItem>
+            <MenuItem value={"top-contributor"}>Top Contributors</MenuItem>
           </Select>
         </FormControl>
       </Box>
