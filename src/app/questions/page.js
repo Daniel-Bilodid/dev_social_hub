@@ -8,6 +8,7 @@ import { useAuth } from "@clerk/nextjs";
 import { getQuestions } from "@/utils/getQuestions";
 import { useUser } from "@clerk/clerk-react";
 import SearchInput from "@/components/searchInput/SearchInput";
+import QuestionsToggleButtons from "@/components/questionsToggleButtons/QuestionsToggleButtons";
 
 const Questions = () => {
   const db = getFirestore();
@@ -73,6 +74,11 @@ const Questions = () => {
           </div>
           <SearchInput
             usersQuestions={usersQuestions}
+            usersFilteredQuestions={usersFilteredQuestions}
+            setUsersFilteredQuestions={setUsersFilteredQuestions}
+          />
+
+          <QuestionsToggleButtons
             usersFilteredQuestions={usersFilteredQuestions}
             setUsersFilteredQuestions={setUsersFilteredQuestions}
           />

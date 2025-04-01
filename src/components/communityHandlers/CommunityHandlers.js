@@ -25,6 +25,8 @@ const CommunityHandlers = ({
     );
 
     setUsersFilteredList(sortedUsers);
+
+    console.log("users", usersList);
   };
 
   function handleSearch(e) {
