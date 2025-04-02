@@ -110,7 +110,7 @@ const QuestionEditor = ({ postId, onNewResponse }) => {
 
       await addDoc(postsRef, {
         content: editorContent,
-
+        postId: postId,
         userId: userId,
         username: user?.username,
         imageUrl: user?.imageUrl,

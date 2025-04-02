@@ -7,6 +7,7 @@ import { getResponses } from "@/utils/getQuestions";
 const QuestionsToggleButtons = ({
   usersFilteredQuestions,
   setUsersFilteredQuestions,
+  usersQuestions,
 }) => {
   const [activeButton, setActiveButton] = useState("Newest");
   const [responses, setResponses] = useState([]);
@@ -16,7 +17,10 @@ const QuestionsToggleButtons = ({
       const fetchedResponses = await Promise.all(
         usersFilteredQuestions.map((q) => getResponses(q.id))
       );
-      setResponses(fetchedResponses);
+      const nonEmptyResponses = fetchedResponses.filter(
+        (response) => response.length > 0
+      );
+      setResponses(nonEmptyResponses);
     }
 
     fetchResponses();
@@ -25,26 +29,24 @@ const QuestionsToggleButtons = ({
   function toggleQuestion(label) {
     setActiveButton(label);
 
-    if (activeButton === "Unanswered") {
-      console.log("hello");
-      const sortedUsers = [...usersFilteredQuestions].filter(
-        (question, index) => {
-          responses.forEach((item) => {
-            console.log("here", item.includes(question.userId));
-          });
-        }
-      );
-    }
+    if (label === "Unanswered") {
+      const responseIds = responses.flat().map((response) => response.postId);
 
-    const sortedUsers = [...usersFilteredQuestions].sort((a, b) =>
-      activeButton === "Newest"
-        ? a.createdAt - b.createdAt
-        : b.createdAt - a.createdAt
+      const filteredQuestions = usersQuestions.filter((question) => {
+        const contains = responseIds.includes(question.id);
+
+        return !contains;
+      });
+
+      setUsersFilteredQuestions(filteredQuestions);
+      return;
+    }
+    setUsersFilteredQuestions(usersQuestions);
+    const sortedUsers = [...usersQuestions].sort((a, b) =>
+      label === "Newest" ? a.createdAt - b.createdAt : b.createdAt - a.createdAt
     );
 
     setUsersFilteredQuestions(sortedUsers);
-    console.log(usersFilteredQuestions);
-    console.log("res", responses);
   }
   useEffect(() => {
     toggleQuestion(activeButton);

@@ -81,6 +81,7 @@ const Questions = () => {
           <QuestionsToggleButtons
             usersFilteredQuestions={usersFilteredQuestions}
             setUsersFilteredQuestions={setUsersFilteredQuestions}
+            usersQuestions={usersQuestions}
           />
         </div>
 

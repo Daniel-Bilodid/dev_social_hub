@@ -6,7 +6,7 @@ import QuestionComponent from "../questionComponent/QuestionComponent";
 import { getResponses } from "@/utils/getQuestions";
 import ToggleButton from "@mui/material/ToggleButton";
 import ToggleButtonGroup from "@mui/material/ToggleButtonGroup";
-import ResponsesComponent from "../responsesComponent/responsesComponent";
+import ResponsesComponent from "../responsesComponent/ResponsesComponent";
 
 const UserQuestions = ({ userId }) => {
   const [filteredQuestions, setFilteredQuestions] = useState([]);
