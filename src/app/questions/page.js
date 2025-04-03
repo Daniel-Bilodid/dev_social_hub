@@ -72,7 +72,7 @@ const Questions = () => {
 
             <button
               onClick={() => setPopupToggle(true)}
-              className="bg-gray-600 text-white px-6 py-2 rounded-md text-lg font-medium hover:bg-indigo-500 transition-all cursor-pointer "
+              className="bg-third text-font px-6 py-2 rounded-md text-lg font-medium hover:bg-secondary transition-all cursor-pointer "
             >
               Ask a Question
             </button>

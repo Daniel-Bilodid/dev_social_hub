@@ -27,7 +27,7 @@ const AskQuestionPopup = ({ setPopupToggle, addQuestion }) => {
 
   return (
     <div className="fixed inset-0 bg-[rgba(31,41,55,0.5)] flex justify-center items-center z-50">
-      <div className="bg-gray-800  p-6 rounded-lg w-[600px] shadow-lg">
+      <div className="bg-secondary  p-6 rounded-lg w-[600px] shadow-lg">
         <h2 className="text-xl font-bold mb-4">Ask a Question</h2>
         <form onSubmit={handleSubmit}>
           <div className="mb-4">
@@ -40,11 +40,11 @@ const AskQuestionPopup = ({ setPopupToggle, addQuestion }) => {
               placeholder="Ask your question..."
               value={question}
               onChange={(e) => setQuestion(e.target.value)}
-              className="w-full px-4 py-2 border border-gray-300 rounded-md"
+              className="w-full px-4 py-2 border border-third rounded-md"
             />
           </div>
           <div className="mb-4">
-            <label htmlFor="question" className="block text-white">
+            <label htmlFor="question" className="block text-font">
               Add more about your question:
             </label>
             <textarea
@@ -55,7 +55,7 @@ const AskQuestionPopup = ({ setPopupToggle, addQuestion }) => {
               placeholder="Add more about your question..."
               value={text}
               onChange={(e) => setText(e.target.value)}
-              className="w-full px-4 py-2 border border-gray-300 rounded-md"
+              className="w-full px-4 py-2 border border-third rounded-md"
             />
           </div>
           <div className="w-64">
@@ -74,13 +74,13 @@ const AskQuestionPopup = ({ setPopupToggle, addQuestion }) => {
             <button
               type="button"
               onClick={() => setPopupToggle(false)}
-              className="px-4 py-2 bg-gray-400 text-white rounded-md hover:bg-gray-500"
+              className="px-4 py-2 bg-third text-white rounded-md hover:bg-gray-500"
             >
               Cancel
             </button>
             <button
               type="submit"
-              className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700"
+              className="px-4 py-2 bg-third text-white rounded-md hover:bg-blue-700"
             >
               Submit
             </button>

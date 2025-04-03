@@ -69,9 +69,23 @@ const QuestionsToggleButtons = ({
         <ButtonGroup variant="outlined" aria-label="Basic button group">
           {["Newest", "Oldest", "Unanswered"].map((label) => (
             <Button
+              sx={{
+                backgroundColor:
+                  activeButton === label
+                    ? "var(--color-secondary)"
+                    : "var(--color-third)",
+                borderColor: "var(--color-secondary)",
+                color: "var(--color-font)",
+                "&:hover": {
+                  backgroundColor:
+                    activeButton === label
+                      ? "var(--color-secondary-hover)"
+                      : "var(--color-third-hover)",
+                },
+              }}
               key={label}
               onClick={() => toggleQuestion(label)}
-              variant={activeButton === label ? "contained" : "outlined"}
+              variant="contained"
             >
               {label}
             </Button>

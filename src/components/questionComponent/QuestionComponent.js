@@ -11,11 +11,11 @@ const QuestionComponent = ({ questions, responses }) => {
     <>
       {questions.map((question, index) => (
         <div
-          className="w-full bg-gray-800 p-7 px-9
+          className="w-full bg-secondary p-7 px-9
 mt-[20px] rounded-[20px]"
           key={question.id}
         >
-          <Link href={`/question/${question.id}`} className="text-white ">
+          <Link href={`/question/${question.id}`} className="text-font ">
             {question.question}
           </Link>
           <ul className="flex gap-[10px]">
@@ -23,7 +23,7 @@ mt-[20px] rounded-[20px]"
               return (
                 <li
                   key={index}
-                  className="decoration-none text-white bg-gray-900 p-2 rounded-[10px]"
+                  className="decoration-none text-font bg-third p-2 rounded-[10px]"
                 >
                   {technology.value}
                 </li>
@@ -31,7 +31,7 @@ mt-[20px] rounded-[20px]"
             })}
           </ul>
 
-          <div className="text-white flex justify-between">
+          <div className="text-font flex justify-between">
             <div className="flex">
               <div>
                 <Image

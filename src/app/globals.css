@@ -3,6 +3,33 @@
 :root {
   --background: #ffffff;
   --foreground: #171717;
+
+  --color-primary: #0d1b2a;
+  --color-secondary: #1b263b;
+  --color-third: #415a77;
+  --color-font: #e0e1dd;
+}
+
+/* --color-primary: #0d1b2a;
+--color-secondary: #1b263b;
+--color-third: #415a77;
+--color-font: #e0e1dd; */
+
+/* --color-primary: #1a1a1d;
+--color-secondary: #3b1c32;
+--color-third: #6a1e55;
+--color-font: #e2f1e7; */
+
+/* --color-primary: #243642;
+--color-secondary: #387478;
+--color-third: #629584;
+--color-font: #e2f1e7; */
+
+@theme {
+  --color-primary: #243642;
+  --color-secondary: #387478;
+  --color-third: #629584;
+  --color-font: #e2f1e7;
 }
 
 @theme inline {

@@ -29,7 +29,7 @@ const Nav = ({ children }) => {
 
   return (
     <div className="flex h-screen flex-col">
-      <div className="bg-gray-900 dark:bg-gray-800 p-6 shadow-md flex items-center justify-between">
+      <div className="bg-secondary p-6 shadow-md flex items-center justify-between">
         <div className="text-2xl font-bold text-white">DevHub</div>
 
         <div className="relative w-full max-w-[600px]">
@@ -37,7 +37,7 @@ const Nav = ({ children }) => {
           <input
             type="text"
             placeholder="Search..."
-            className="w-full px-10 py-2 rounded-md border border-gray-600 dark:bg-gray-700 dark:text-white placeholder-gray-400"
+            className="w-full px-10 py-2 rounded-md border border-third dark:bg-third dark:text-font placeholder-font"
           />
         </div>
 
@@ -56,15 +56,15 @@ const Nav = ({ children }) => {
       </div>
 
       <div className="flex flex-1">
-        <div className="w-64 bg-gray-900 dark:bg-gray-800">
+        <div className="w-64 bg-secondary ">
           <SideMenu />
         </div>
 
-        <div className="flex-1 bg-gray-100 dark:bg-gray-900 p-4">
+        <div className="flex-1 bg-primary  p-4">
           <main>{children}</main>
         </div>
 
-        <div className="w-[350px] bg-gray-800">
+        <div className="w-[350px] bg-secondary">
           <NavMenu />
         </div>
       </div>

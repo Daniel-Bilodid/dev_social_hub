@@ -11,25 +11,57 @@ import { RiCommunityLine } from "react-icons/ri";
 
 const SideMenu = () => {
   return (
-    <div className="w-64 bg-[#387478] text-white p-4">
+    <div className="w-64 bg-secondary text-white p-4">
       <Stack spacing={3} direction="column">
-        <Button variant="contained">
-          <Link href="/" className="hover:text-blue-400 flex">
+        <Button
+          variant="contained"
+          sx={{
+            backgroundColor: "var(--color-third)",
+            "&:hover": {
+              backgroundColor: "var(--color-third-hover)",
+            },
+          }}
+        >
+          <Link href="/" className=" flex">
             <MdOutlineHome /> Home
           </Link>
         </Button>
-        <Button variant="contained">
-          <Link href="/questions" className="hover:text-blue-400 flex">
+        <Button
+          variant="contained"
+          sx={{
+            backgroundColor: "var(--color-third)",
+            "&:hover": {
+              backgroundColor: "var(--color-third-hover)",
+            },
+          }}
+        >
+          <Link href="/questions" className=" flex">
             <LuFileQuestion /> Questions
           </Link>
         </Button>
-        <Button variant="contained">
-          <Link href="/tags" className="hover:text-blue-400 flex">
+        <Button
+          variant="contained"
+          sx={{
+            backgroundColor: "var(--color-third)",
+            "&:hover": {
+              backgroundColor: "var(--color-third-hover)",
+            },
+          }}
+        >
+          <Link href="/tags" className=" flex">
             <FaTags /> Tags
           </Link>
         </Button>
-        <Button variant="contained">
-          <Link href="/community" className="hover:text-blue-400 flex">
+        <Button
+          variant="contained"
+          sx={{
+            backgroundColor: "var(--color-third)",
+            "&:hover": {
+              backgroundColor: "var(--color-third-hover)",
+            },
+          }}
+        >
+          <Link href="/community" className=" flex">
             <RiCommunityLine /> Community
           </Link>
         </Button>
