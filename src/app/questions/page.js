@@ -16,24 +16,29 @@ const Questions = () => {
   const [popupToggle, setPopupToggle] = useState(false);
   const [usersQuestions, setUsersQuestions] = useState([]);
   const [usersFilteredQuestions, setUsersFilteredQuestions] = useState([]);
+  const [displayQuestions, setDisplayQuestions] = useState([]);
   const { user } = useUser();
   const [loading, setLoading] = useState(true);
-  console.log(user, userId);
+
   const fetchQuestions = async () => {
     if (userId) {
       const questions = await getQuestions(userId);
 
       setUsersQuestions(questions || []);
       setLoading(false);
-      console.log(usersQuestions);
     }
   };
   useEffect(() => {
     fetchQuestions();
   }, [userId]);
+
   useEffect(() => {
     setUsersFilteredQuestions(usersQuestions);
   }, [usersQuestions]);
+
+  useEffect(() => {
+    setDisplayQuestions(usersFilteredQuestions);
+  }, [usersFilteredQuestions]);
 
   const addQuestion = async (newQuestion) => {
     if (!userId) {
@@ -81,11 +86,11 @@ const Questions = () => {
           <QuestionsToggleButtons
             usersFilteredQuestions={usersFilteredQuestions}
             setUsersFilteredQuestions={setUsersFilteredQuestions}
-            usersQuestions={usersQuestions}
+            setDisplayQuestions={setDisplayQuestions}
           />
         </div>
 
-        <Question questions={usersFilteredQuestions} user={user} />
+        <Question questions={displayQuestions} user={user} />
 
         {popupToggle ? (
           <AskQuestionPopup

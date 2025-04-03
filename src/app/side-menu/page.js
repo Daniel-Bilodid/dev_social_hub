@@ -2,32 +2,38 @@
 
 import React from "react";
 import Link from "next/link";
+import Stack from "@mui/material/Stack";
+import Button from "@mui/material/Button";
+import { MdOutlineHome } from "react-icons/md";
+import { LuFileQuestion } from "react-icons/lu";
+import { FaTags } from "react-icons/fa";
+import { RiCommunityLine } from "react-icons/ri";
 
 const SideMenu = () => {
   return (
-    <div className="w-64 bg-gray-800 text-white p-4">
-      <ul className="space-y-4">
-        <li>
-          <Link href="/" className="hover:text-blue-400">
-            Home
+    <div className="w-64 bg-[#387478] text-white p-4">
+      <Stack spacing={3} direction="column">
+        <Button variant="contained">
+          <Link href="/" className="hover:text-blue-400 flex">
+            <MdOutlineHome /> Home
           </Link>
-        </li>
-        <li>
-          <Link href="/questions" className="hover:text-blue-400">
-            Questions
+        </Button>
+        <Button variant="contained">
+          <Link href="/questions" className="hover:text-blue-400 flex">
+            <LuFileQuestion /> Questions
           </Link>
-        </li>
-        <li>
-          <Link href="/tags" className="hover:text-blue-400">
-            Tags
+        </Button>
+        <Button variant="contained">
+          <Link href="/tags" className="hover:text-blue-400 flex">
+            <FaTags /> Tags
           </Link>
-        </li>
-        <li>
-          <Link href="/community" className="hover:text-blue-400">
-            Community
+        </Button>
+        <Button variant="contained">
+          <Link href="/community" className="hover:text-blue-400 flex">
+            <RiCommunityLine /> Community
           </Link>
-        </li>
-      </ul>
+        </Button>
+      </Stack>
     </div>
   );
 };

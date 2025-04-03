@@ -7,7 +7,7 @@ import { getResponses } from "@/utils/getQuestions";
 const QuestionsToggleButtons = ({
   usersFilteredQuestions,
   setUsersFilteredQuestions,
-  usersQuestions,
+  setDisplayQuestions,
 }) => {
   const [activeButton, setActiveButton] = useState("Newest");
   const [responses, setResponses] = useState([]);
@@ -32,25 +32,25 @@ const QuestionsToggleButtons = ({
     if (label === "Unanswered") {
       const responseIds = responses.flat().map((response) => response.postId);
 
-      const filteredQuestions = usersQuestions.filter((question) => {
+      const filteredQuestions = usersFilteredQuestions.filter((question) => {
         const contains = responseIds.includes(question.id);
 
         return !contains;
       });
 
-      setUsersFilteredQuestions(filteredQuestions);
-      return;
-    }
-    setUsersFilteredQuestions(usersQuestions);
-    const sortedUsers = [...usersQuestions].sort((a, b) =>
-      label === "Newest" ? a.createdAt - b.createdAt : b.createdAt - a.createdAt
-    );
+      setDisplayQuestions(filteredQuestions);
+    } else {
+      const sortedUsers = [...usersFilteredQuestions].sort((a, b) =>
+        label === "Newest"
+          ? b.createdAt - a.createdAt
+          : a.createdAt - b.createdAt
+      );
 
-    setUsersFilteredQuestions(sortedUsers);
+      setDisplayQuestions(sortedUsers);
+    }
   }
   useEffect(() => {
     toggleQuestion(activeButton);
-    console.log("test"); //////////////
   }, []);
 
   return (
