@@ -74,8 +74,8 @@ const QuestionPage = () => {
         <ul className="flex gap-[10px]">
           {usersQuestions?.technology?.length > 0 ? (
             usersQuestions.technology.map((item) => (
-              <li className="bg-gray-800 p-2 rounded-[10px]" key={item.value}>
-                {item.value}
+              <li className="bg-gray-800 p-2 rounded-[10px]" key={item}>
+                {item}
               </li>
             ))
           ) : (

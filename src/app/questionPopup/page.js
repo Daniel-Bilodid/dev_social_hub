@@ -9,13 +9,12 @@ const AskQuestionPopup = ({ setPopupToggle, addQuestion }) => {
     e.preventDefault();
 
     if (question && technology) {
-      const newQuestion = { question, technology, text };
+      const technologyValues = technology.map((item) => item.value);
+      const newQuestion = { question, technology: technologyValues, text };
+
       addQuestion(newQuestion);
       setPopupToggle(false);
     }
-
-    console.log("Question:", question);
-    console.log("Technology:", technology);
   };
 
   const options = [
