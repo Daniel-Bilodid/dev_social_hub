@@ -26,12 +26,19 @@ const Tags = () => {
   return (
     <div>
       <h2 className="text-red-100">All Tags</h2>
-      <SearchTags tags={tags} setFilteredTags={setFilteredTags} />
-      <TagsToggleButtons />
+      <div className="flex justify-between">
+        <SearchTags tags={tags} setFilteredTags={setFilteredTags} />
+        <TagsToggleButtons
+          tags={tags}
+          setDisplayTag={setDisplayTag}
+          tagCounts={tagCounts}
+          filteredTags={filteredTags}
+        />
+      </div>
 
       <div className="max-w-4xl mx-auto px-4 mt-[40px]">
         <div className="grid grid-cols-[repeat(auto-fill,minmax(150px,1fr))] gap-4">
-          {filteredTags.map((tag, index) => (
+          {displayTag.map((tag, index) => (
             <>
               <Link
                 key={index}
