@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from "react";
-import Button from "@mui/material/Button";
-import ButtonGroup from "@mui/material/ButtonGroup";
-import Box from "@mui/material/Box";
+
 import { getResponses } from "@/utils/getQuestions";
+import ButtonsToggleGroup from "../buttonsToggleGroup/ButtonsToggleGroup";
 
 const QuestionsToggleButtons = ({
   usersFilteredQuestions,
@@ -11,6 +10,7 @@ const QuestionsToggleButtons = ({
 }) => {
   const [activeButton, setActiveButton] = useState("Newest");
   const [responses, setResponses] = useState([]);
+  const [filters, setFilters] = useState(["Newest", "Oldest", "Unanswered"]);
 
   useEffect(() => {
     async function fetchResponses() {
@@ -54,45 +54,11 @@ const QuestionsToggleButtons = ({
   }, []);
 
   return (
-    <div>
-      <Box
-        sx={{
-          display: "flex",
-          flexDirection: "column",
-
-          gap: "10px",
-          "& > *": {
-            m: 1,
-          },
-        }}
-      >
-        <ButtonGroup variant="outlined" aria-label="Basic button group">
-          {["Newest", "Oldest", "Unanswered"].map((label) => (
-            <Button
-              sx={{
-                backgroundColor:
-                  activeButton === label
-                    ? "var(--color-secondary)"
-                    : "var(--color-third)",
-                borderColor: "var(--color-secondary)",
-                color: "var(--color-font)",
-                "&:hover": {
-                  backgroundColor:
-                    activeButton === label
-                      ? "var(--color-secondary-hover)"
-                      : "var(--color-third-hover)",
-                },
-              }}
-              key={label}
-              onClick={() => toggleQuestion(label)}
-              variant="contained"
-            >
-              {label}
-            </Button>
-          ))}
-        </ButtonGroup>
-      </Box>
-    </div>
+    <ButtonsToggleGroup
+      filters={filters}
+      toggleQuestion={toggleQuestion}
+      activeButton={activeButton}
+    />
   );
 };
 

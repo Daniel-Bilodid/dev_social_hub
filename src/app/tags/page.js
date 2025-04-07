@@ -1,20 +1,37 @@
 "use client";
 
-import React, { useMemo } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 
 import Link from "next/link";
 import useTagCounts from "@/hooks/useTagCounts";
+import SearchTags from "@/components/SearchTags/SearchTags";
+import TagsToggleButtons from "@/components/tagsToggleButtons/TagsToggleButtons";
 
 const Tags = () => {
   const tags = useMemo(() => ["HTML", "CSS", "JavaScript", "React"], []);
   const tagCounts = useTagCounts(tags);
+  const [filteredTags, setFilteredTags] = useState([]);
+  const [displayTag, setDisplayTag] = useState([]);
   console.log("count", tagCounts);
+  console.log("tags", filteredTags);
+
+  useEffect(() => {
+    setFilteredTags(tags);
+  }, [tags]);
+
+  useEffect(() => {
+    setDisplayTag(filteredTags);
+  }, [filteredTags]);
+
   return (
     <div>
       <h2 className="text-red-100">All Tags</h2>
+      <SearchTags tags={tags} setFilteredTags={setFilteredTags} />
+      <TagsToggleButtons />
+
       <div className="max-w-4xl mx-auto px-4 mt-[40px]">
         <div className="grid grid-cols-[repeat(auto-fill,minmax(150px,1fr))] gap-4">
-          {tags.map((tag, index) => (
+          {filteredTags.map((tag, index) => (
             <>
               <Link
                 key={index}
