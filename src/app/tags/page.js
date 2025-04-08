@@ -6,14 +6,29 @@ import Link from "next/link";
 import useTagCounts from "@/hooks/useTagCounts";
 import SearchTags from "@/components/SearchTags/SearchTags";
 import TagsToggleButtons from "@/components/tagsToggleButtons/TagsToggleButtons";
+import { getTags } from "@/utils/getTags";
 
 const Tags = () => {
-  const tags = useMemo(() => ["HTML", "CSS", "JavaScript", "React"], []);
+  const [tags, setTags] = useState([]);
+  useEffect(() => {
+    const fetchTags = async () => {
+      const fetchedTags = await getTags();
+
+      const tagValues = fetchedTags.map((tag) => tag.value);
+
+      setTags(tagValues);
+
+      console.log("tags", fetchedTags);
+    };
+    fetchTags();
+  }, []);
+
   const tagCounts = useTagCounts(tags);
   const [filteredTags, setFilteredTags] = useState([]);
   const [displayTag, setDisplayTag] = useState([]);
   console.log("count", tagCounts);
   console.log("tags", filteredTags);
+  console.log("originalTags", tags);
 
   useEffect(() => {
     setFilteredTags(tags);

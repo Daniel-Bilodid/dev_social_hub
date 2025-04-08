@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 import TextField from "@mui/material/TextField";
 import Autocomplete from "@mui/material/Autocomplete";
@@ -6,10 +6,21 @@ import Chip from "@mui/material/Chip";
 import addTags from "@/utils/addTags";
 import { useUser } from "@clerk/clerk-react";
 import { useAuth } from "@clerk/nextjs";
+import { getTags } from "@/utils/getTags";
 
 const AskQuestionPopup = ({ setPopupToggle, addQuestion }) => {
   const [question, setQuestion] = useState("");
   const [technology, setTechnology] = useState([]);
+  const [options, setOptions] = useState([]);
+
+  useEffect(() => {
+    const fetchTags = async () => {
+      const tags = await getTags();
+      setOptions(tags);
+      console.log("options", tags);
+    };
+    fetchTags();
+  }, []);
 
   const [text, setText] = useState("");
   const { userId } = useAuth();
@@ -17,9 +28,7 @@ const AskQuestionPopup = ({ setPopupToggle, addQuestion }) => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log("technology", technology);
-    console.log("user", user);
-    console.log("userId", userId);
+
     if (question && technology) {
       const technologyValues = technology.map((item) => item.value);
       const newQuestion = { question, technology: technologyValues, text };
@@ -29,13 +38,6 @@ const AskQuestionPopup = ({ setPopupToggle, addQuestion }) => {
       setPopupToggle(false);
     }
   };
-
-  const options = [
-    { value: "HTML", label: "HTML" },
-    { value: "CSS", label: "CSS" },
-    { value: "JavaScript", label: "JavaScript" },
-    { value: "React", label: "React" },
-  ];
 
   return (
     <div className="fixed inset-0 bg-[rgba(31,41,55,0.5)] flex justify-center items-center z-50">
