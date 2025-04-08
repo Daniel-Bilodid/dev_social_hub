@@ -25,7 +25,6 @@ mt-[20px] rounded-[20px]"
                   key={index}
                   className="decoration-none text-font bg-third p-2 rounded-[10px]"
                 >
-                  {console.log("tech", technology)}
                   {technology.value ? technology.value : technology}
                 </li>
               );

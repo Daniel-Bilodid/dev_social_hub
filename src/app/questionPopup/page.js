@@ -1,18 +1,31 @@
 import React, { useState } from "react";
-import Select from "react-select";
+
+import TextField from "@mui/material/TextField";
+import Autocomplete from "@mui/material/Autocomplete";
+import Chip from "@mui/material/Chip";
+import addTags from "@/utils/addTags";
+import { useUser } from "@clerk/clerk-react";
+import { useAuth } from "@clerk/nextjs";
+
 const AskQuestionPopup = ({ setPopupToggle, addQuestion }) => {
   const [question, setQuestion] = useState("");
   const [technology, setTechnology] = useState([]);
+
   const [text, setText] = useState("");
+  const { userId } = useAuth();
+  const { user } = useUser();
 
   const handleSubmit = (e) => {
     e.preventDefault();
-
+    console.log("technology", technology);
+    console.log("user", user);
+    console.log("userId", userId);
     if (question && technology) {
       const technologyValues = technology.map((item) => item.value);
       const newQuestion = { question, technology: technologyValues, text };
 
       addQuestion(newQuestion);
+      addTags(technology, userId, user);
       setPopupToggle(false);
     }
   };
@@ -58,15 +71,41 @@ const AskQuestionPopup = ({ setPopupToggle, addQuestion }) => {
             />
           </div>
           <div className="w-64">
-            <Select
-              defaultValue={"meow"}
-              isMulti
-              name="colors"
+            <Autocomplete
+              multiple
+              freeSolo
               options={options}
               value={technology}
-              onChange={setTechnology}
-              className="basic-multi-select"
-              classNamePrefix="select"
+              onChange={(event, newValue) => {
+                const updatedTechnologies = newValue.map((item) =>
+                  typeof item === "string" ? { value: item, label: item } : item
+                );
+                setTechnology(updatedTechnologies);
+              }}
+              renderTags={(value, getTagProps) =>
+                value.map((option, index) => {
+                  const label =
+                    typeof option === "string" ? option : option.label;
+                  const key =
+                    typeof option === "string" ? option : option.value;
+                  return (
+                    <Chip
+                      variant="outlined"
+                      label={label}
+                      {...getTagProps({ index })}
+                      key={key}
+                    />
+                  );
+                })
+              }
+              renderInput={(params) => (
+                <TextField
+                  {...params}
+                  variant="outlined"
+                  label="Enter tags"
+                  placeholder="Tags"
+                />
+              )}
             />
           </div>
           <div className="flex justify-between">
