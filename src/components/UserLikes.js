@@ -1,13 +1,21 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { LuArrowBigUp } from "react-icons/lu";
 import { LuArrowBigDown } from "react-icons/lu";
 import { CiStar } from "react-icons/ci";
+import AddToFavorite from "@/utils/addToFavorite";
+import { useAuth } from "@clerk/nextjs";
+
 const UserLikes = ({ postId }) => {
   const [isLiked, setIsLiked] = useState(false);
   const [isDisliked, setIsDisliked] = useState(false);
   const [isBookmarked, setIsBookmarked] = useState(false);
+  const { userId } = useAuth();
 
-  // check for user if he already upvoted and after that perform firebase request with postId
+  useEffect(() => {
+    if (isBookmarked) {
+      AddToFavorite(postId, userId);
+    }
+  }, [isBookmarked]);
 
   const handleUserInteraction = (type) => {
     switch (type) {
@@ -21,6 +29,7 @@ const UserLikes = ({ postId }) => {
         break;
       case "bookmark":
         setIsBookmarked((prev) => !prev);
+
         break;
       default:
         break;
@@ -41,11 +50,17 @@ const UserLikes = ({ postId }) => {
         />
         <span>{isLiked ? 1 : 0}</span>
       </div>
-      <div className="flex">
+      <div className="flex" onClick={() => handleUserInteraction("dislike")}>
         <LuArrowBigDown size={25} className="cursor-pointer" /> <span>0</span>
       </div>
       <div>
-        <CiStar size={25} className="cursor-pointer" />
+        <CiStar
+          size={25}
+          onClick={() => handleUserInteraction("bookmark")}
+          className={`cursor-pointer ${
+            isBookmarked ? "text-amber-300" : "text-gray-500"
+          }`}
+        />
       </div>
     </div>
   );

@@ -8,6 +8,7 @@ import { MdOutlineHome } from "react-icons/md";
 import { LuFileQuestion } from "react-icons/lu";
 import { FaTags } from "react-icons/fa";
 import { RiCommunityLine } from "react-icons/ri";
+import { IoBookmarksOutline } from "react-icons/io5";
 
 const SideMenu = () => {
   return (
@@ -61,8 +62,8 @@ const SideMenu = () => {
             },
           }}
         >
-          <Link href="/community" className=" flex">
-            <RiCommunityLine /> Community
+          <Link href="/favorite" className=" flex">
+            <IoBookmarksOutline /> Favorite
           </Link>
         </Button>
       </Stack>
