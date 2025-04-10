@@ -1,39 +1,84 @@
 import React, { useState, useEffect } from "react";
 import { getQuestions } from "@/utils/getQuestions";
-import { FaArrowRight } from "react-icons/fa";
+import { MdOutlineKeyboardArrowRight } from "react-icons/md";
 import Link from "next/link";
+import { getTags } from "@/utils/getTags";
+import useTagCounts from "@/hooks/useTagCounts";
 
 const NavMenu = () => {
   const [questions, setQuestions] = useState([]);
+  const [tags, setTags] = useState([]);
 
   useEffect(() => {
-    const fetchQuestions = async () => {
+    const fetchQuestionsAndTags = async () => {
       const question = await getQuestions();
+      const tags = await getTags();
+      const tagValues = tags.map((tag) => tag.value);
 
       setQuestions(question);
+      setTags(tagValues);
     };
-    fetchQuestions();
+    fetchQuestionsAndTags();
   }, []);
 
+  const tagCounts = useTagCounts(tags);
+
+  useEffect(() => {
+    console.log("tags", tags[0]?.value);
+    console.log("flatTags", tags.flat());
+    console.log("tagsCount", tagCounts);
+  }, [tags]);
   return (
     <div className="w-[350px] p-[24px] ">
-      <h2>Top Questions</h2>
-
       <div>
-        <ul>
-          {questions.map((question, index) => (
-            <Link
-              href={`/question/${question.id}`}
-              key={index}
-              className="flex mt-[20px] cursor-pointer"
-            >
-              {question.question}{" "}
-              <span>
-                <FaArrowRight />
-              </span>
-            </Link>
-          ))}
-        </ul>
+        <h2 className="text-[20px] font-sans font-bold">Top Questions</h2>
+
+        <div>
+          <ul>
+            {questions.slice(0, 5).map((question, index) => (
+              <Link
+                href={`/question/${question.id}`}
+                key={index}
+                className="flex justify-between items-center mt-[20px] cursor-pointer"
+              >
+                <p className="text-[14px] ">
+                  {" "}
+                  {question.question.length > 70
+                    ? question.question.slice(0, 70) + "..."
+                    : question.question}{" "}
+                </p>
+                <span>
+                  <MdOutlineKeyboardArrowRight />
+                </span>
+              </Link>
+            ))}
+          </ul>
+        </div>
+      </div>
+
+      <div className="mt-[50px]">
+        <h2 className="text-[20px] font-sans font-bold">Popular tags</h2>
+
+        <div>
+          <ul>
+            {tags.slice(0, 5).map((tag, index) => (
+              <Link
+                href={`/tags/${tag}`}
+                key={index}
+                className="flex justify-between items-center mt-[20px] cursor-pointer"
+              >
+                <h3 className="inline-flex items-center border text-xs font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 border-transparent bg-primary hover:bg-primary/80 subtle-medium background-light800_dark300 text-dark400_light500 rounded-md border-none px-4 py-2 uppercase">
+                  {tag}
+                </h3>
+                <p className="text-sm text-gray-300">
+                  {tagCounts[tag]
+                    ? `${tagCounts[tag]}`
+                    : "There is no questions..."}
+                </p>
+              </Link>
+            ))}
+          </ul>
+        </div>
       </div>
     </div>
   );
