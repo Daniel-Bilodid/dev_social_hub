@@ -8,26 +8,34 @@ import useTagCounts from "@/hooks/useTagCounts";
 const NavMenu = () => {
   const [questions, setQuestions] = useState([]);
   const [tags, setTags] = useState([]);
+  const [sortedTags, setSortedTags] = useState([]);
 
+  const tagCounts = useTagCounts(tags);
   useEffect(() => {
     const fetchQuestionsAndTags = async () => {
       const question = await getQuestions();
-      const tags = await getTags();
-      const tagValues = tags.map((tag) => tag.value);
+      const tagsData = await getTags();
 
       setQuestions(question);
+
+      const tagValues = tagsData.map((tag) => tag.value);
+
       setTags(tagValues);
     };
     fetchQuestionsAndTags();
   }, []);
 
-  const tagCounts = useTagCounts(tags);
-
   useEffect(() => {
-    console.log("tags", tags[0]?.value);
-    console.log("flatTags", tags.flat());
-    console.log("tagsCount", tagCounts);
-  }, [tags]);
+    if (!tagCounts || Object.keys(tagCounts).length === 0) return;
+
+    const sorted = tags
+      .filter((tag) => tagCounts[tag] !== null)
+      .sort((a, b) => tagCounts[b] - tagCounts[a]);
+
+    console.log("tagCounts", tagCounts);
+    console.log("sortedTags", sortedTags);
+    setSortedTags(sorted);
+  }, [tagCounts, tags]);
   return (
     <div className="w-[350px] p-[24px] ">
       <div>
@@ -41,7 +49,7 @@ const NavMenu = () => {
                 key={index}
                 className="flex justify-between items-center mt-[20px] cursor-pointer"
               >
-                <p className="text-[14px] ">
+                <p className="text-[14px]">
                   {" "}
                   {question.question.length > 70
                     ? question.question.slice(0, 70) + "..."
@@ -61,7 +69,7 @@ const NavMenu = () => {
 
         <div>
           <ul>
-            {tags.slice(0, 5).map((tag, index) => (
+            {sortedTags.slice(0, 5).map((tag, index) => (
               <Link
                 href={`/tags/${tag}`}
                 key={index}
