@@ -30,7 +30,9 @@ const Nav = ({ children }) => {
   return (
     <div className="flex h-screen flex-col">
       <div className="bg-secondary p-6 shadow-md flex items-center justify-between">
-        <div className="text-2xl font-bold text-white">DevHub</div>
+        <Link href="/" className="text-2xl font-bold text-white">
+          DevHub
+        </Link>
 
         <div className="relative w-full max-w-[600px]">
           <FiSearch className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
