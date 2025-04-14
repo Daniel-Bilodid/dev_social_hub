@@ -40,7 +40,7 @@ const AskQuestionPopup = ({ setPopupToggle, addQuestion }) => {
   };
 
   return (
-    <div className="fixed inset-0 bg-[rgba(31,41,55,0.5)] flex justify-center items-center z-50">
+    <div className=" inset-0 bg-[rgba(31,41,55,0.5)] flex justify-center items-center">
       <div className="bg-secondary  p-6 rounded-lg w-[600px] shadow-lg">
         <h2 className="text-xl font-bold mb-4">Ask a Question</h2>
         <form onSubmit={handleSubmit}>

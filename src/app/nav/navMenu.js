@@ -37,7 +37,7 @@ const NavMenu = () => {
     setSortedTags(sorted);
   }, [tagCounts, tags]);
   return (
-    <div className="w-[350px] p-[24px] ">
+    <div className="w-[350px] p-[24px] fixed top-22">
       <div>
         <h2 className="text-[20px] font-sans font-bold">Top Questions</h2>
 

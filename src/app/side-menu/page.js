@@ -16,7 +16,7 @@ const SideMenu = () => {
 
   const isActive = (path) => pathname === path;
   return (
-    <div className="w-64  text-white p-4">
+    <div className="w-64  text-white p-4 fixed top-22">
       <Stack spacing={3} direction="column">
         <Button
           variant="outline"
