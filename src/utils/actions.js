@@ -32,3 +32,29 @@ export default async function getFavorites(userId) {
     return [];
   }
 }
+
+export async function getInterests(userId) {
+  const db = getFirestore();
+
+  try {
+    const interestsRef = collection(doc(db, "users", userId), "interests");
+
+    const interestsQuery = query(interestsRef, where("userId", "==", userId));
+    const interestsSnapshot = await getDocs(interestsQuery);
+
+    if (interestsSnapshot.empty) {
+      console.log("No interests found.");
+      return [];
+    }
+
+    const allIntersts = interestsSnapshot.docs.map((doc) => ({
+      id: doc.id,
+      ...doc.data(),
+    }));
+    console.log("All interests fetched:", allIntersts);
+    return allIntersts;
+  } catch (error) {
+    console.error("Error getting interests:", error);
+    return [];
+  }
+}

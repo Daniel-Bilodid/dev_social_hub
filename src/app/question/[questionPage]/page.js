@@ -36,7 +36,7 @@ const QuestionPage = () => {
   const handleNewResponse = () => {
     fetchResponses();
   };
-
+  console.log("usersQuestions", usersQuestions.technology);
   return (
     <div>
       <div className="mx-auto w-full max-w-5xl">
