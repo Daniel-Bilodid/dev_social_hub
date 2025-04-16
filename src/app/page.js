@@ -6,16 +6,21 @@ import Link from "next/link";
 import useTechnologies from "@/hooks/useTechnologies";
 import { getInterests } from "@/utils/actions";
 import { useAuth } from "@clerk/nextjs";
+import Question from "./question/page";
 
 export default function Home() {
   const { userId } = useAuth();
   const [interests, setInterests] = useState([]);
+  const [questions, setQuestions] = useState([]);
   const { user } = useUser();
   const fetchInterests = async () => {
     try {
       const interestsData = await getInterests(userId);
       console.log("Fetched interests:", interestsData);
-      setInterests(interestsData);
+      const sortedInterests = interestsData.map(
+        (interest) => interest.technology
+      );
+      setInterests(sortedInterests);
     } catch (error) {
       console.error("Error fetching interests:", error);
     }
@@ -25,10 +30,28 @@ export default function Home() {
       fetchInterests();
     }
   }, [userId]);
+  console.log("interests before", interests);
+  const technologies = useTechnologies(interests);
 
-  const technologies = useTechnologies(
-    interests.some((interest) => interest.technology)
-  );
+  useEffect(() => {
+    if (technologies.length > 0) {
+      const sorted = technologies;
+      const filtered = [];
+
+      for (let i = 0; i < sorted.length; i++) {
+        if (!filtered.some((question) => question.id === sorted[i].id)) {
+          filtered.push(sorted[i]);
+          console.log("Pushed", sorted[i]);
+        } else {
+          console.log("Already exists", sorted[i]);
+        }
+      }
+
+      setQuestions(filtered);
+    }
+  }, [technologies]);
+
+  console.log("questions", questions);
   console.log("technologies", technologies);
   console.log("interests", interests);
   return (
@@ -53,6 +76,8 @@ export default function Home() {
           Based on your viewing history and watched tags.{" "}
           <span>Customize your feed</span>
         </p>
+
+        <Question questions={questions} user={user} />
       </div>
     </div>
   );

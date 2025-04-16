@@ -7,11 +7,20 @@ const useTechnologies = (tagName) => {
   const [technologies, setTechnologies] = useState([]);
 
   useEffect(() => {
-    if (!tagName) return;
+    if (!tagName || (Array.isArray(tagName) && tagName.length === 0)) return;
 
     const fetchData = async () => {
       try {
-        const data = await getTechnologies(tagName);
+        let data = [];
+
+        if (Array.isArray(tagName)) {
+          const promises = tagName.map((tag) => getTechnologies(tag));
+          const results = await Promise.all(promises);
+          data = results.flat();
+        } else {
+          data = await getTechnologies(tagName);
+        }
+
         setTechnologies(data);
       } catch (err) {
         console.error("Error fetching technologies:", err);
