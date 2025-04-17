@@ -1,6 +1,6 @@
 "use client";
 
-import { React, useEffect, useState, useCallback } from "react";
+import { React, useEffect, useState, useCallback, use } from "react";
 import { getQuestions, getResponses } from "@/utils/getQuestions";
 import { formatDistance } from "date-fns";
 import { useParams } from "next/navigation";
@@ -8,10 +8,14 @@ import Image from "next/image";
 import QuestionEditor from "@/components/questionEditor/QuestionEditor";
 
 import UserLikes from "@/components/UserLikes";
+import AddToInterests from "@/utils/addInterests";
+import { useUser } from "@clerk/clerk-react";
+
 const QuestionPage = () => {
   const [usersQuestions, setUsersQuestions] = useState([]);
   const [usersResponses, setUsersResponses] = useState([]);
   const { questionPage } = useParams();
+  const { user } = useUser();
 
   useEffect(() => {
     const fetchQuestions = async () => {
@@ -37,6 +41,12 @@ const QuestionPage = () => {
     fetchResponses();
   };
   console.log("usersQuestions", usersQuestions.technology);
+
+  useEffect(() => {
+    if (!usersQuestions) return;
+    AddToInterests(usersQuestions.technology, user?.id);
+  }, [usersQuestions]);
+
   return (
     <div>
       <div className="mx-auto w-full max-w-5xl">
