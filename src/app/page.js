@@ -7,12 +7,22 @@ import useTechnologies from "@/hooks/useTechnologies";
 import { getInterests } from "@/utils/actions";
 import { useAuth } from "@clerk/nextjs";
 import Question from "./question/page";
+import Modal from "@/components/modal/Modal";
+import ToggleButton from "@mui/material/ToggleButton";
+import ToggleButtonGroup from "@mui/material/ToggleButtonGroup";
+import Box from "@mui/material/Box";
+import TextField from "@mui/material/TextField";
 
 export default function Home() {
   const { userId } = useAuth();
   const [interests, setInterests] = useState([]);
   const [questions, setQuestions] = useState([]);
+  const [isModalOpen, setModalOpen] = useState(false);
+  const [alignment, setAlignment] = React.useState("Wathced tags");
   const { user } = useUser();
+  const handleChange = (event, newAlignment) => {
+    setAlignment(newAlignment);
+  };
   const fetchInterests = async () => {
     try {
       const interestsData = await getInterests(userId);
@@ -75,13 +85,42 @@ export default function Home() {
         <p className="text-[13px] text-gray-300">
           Based on your viewing history and watched tags.{" "}
           <button
-            onClick={() => console.log("hello")}
+            onClick={() => setModalOpen(true)}
             className="border-0 bg-none underline text-blue-500 cursor-pointer"
           >
             Customize your feed
           </button>
         </p>
+        <Modal isOpen={isModalOpen} onClose={() => setModalOpen(false)}>
+          <ToggleButtonGroup
+            color="primary"
+            value={alignment}
+            exclusive
+            onChange={handleChange}
+            aria-label="Platform"
+          >
+            <ToggleButton
+              onClick={() => console.log("watched")}
+              value="Watched tags"
+            >
+              Watched tags
+            </ToggleButton>
+            <ToggleButton value="Ignored tags">Ignored tags</ToggleButton>
+          </ToggleButtonGroup>
 
+          <Box
+            component="form"
+            sx={{ "& > :not(style)": { m: 1, width: "25ch" } }}
+            noValidate
+            autoComplete="off"
+          >
+            <TextField
+              id="outlined-basic"
+              label="Find a tag by name"
+              variant="outlined"
+            />
+          </Box>
+        </Modal>
         <Question questions={questions} user={user} />
       </div>
     </div>

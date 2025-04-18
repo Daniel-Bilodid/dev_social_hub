@@ -34,6 +34,7 @@ export default function RootLayout({ children }) {
       >
         <ClerkProvider>
           <NavPage>{children}</NavPage>
+          <div id="modal-root" />
         </ClerkProvider>
       </body>
     </html>
