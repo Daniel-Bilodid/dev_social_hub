@@ -17,17 +17,22 @@ export default async function AddToInterests(technology, userId) {
     const technologysRef = collection(doc(db, "users", userId), "interests");
     const technologysSnapshot = await getDocs(technologysRef);
 
+    const existingTech = technologysSnapshot.docs.map(
+      (doc) => doc.data().technology
+    );
+    console.log("Existing technologies in interests:", existingTech);
+    let newTech = [];
+
     if (Array.isArray(technology)) {
-      const alreadyInInterests = technology.some(
-        (tech) =>
-          technologysSnapshot.docs.some((doc) => doc.data().technology === tech) // add filter to check if any of the technologies are already in interests
-      );
-      if (alreadyInInterests) {
+      newTech = technology.filter((tech) => !existingTech.includes(tech));
+
+      if (newTech.length === 0) {
         console.log("Technology already in interests.");
         return;
       }
+      console.log("Adding new technologies to interests:", newTech);
       await Promise.all(
-        technology.map((tech) =>
+        newTech.map((tech) =>
           addDoc(technologysRef, {
             technology: tech,
             userId,

@@ -71,10 +71,15 @@ export default function Home() {
       </div>
 
       <div>
-        <h2>Interesting posts for you</h2>
-        <p>
+        <h2 className="text-xl font-bold">Interesting posts for you</h2>
+        <p className="text-[13px] text-gray-300">
           Based on your viewing history and watched tags.{" "}
-          <span>Customize your feed</span>
+          <button
+            onClick={() => console.log("hello")}
+            className="border-0 bg-none underline text-blue-500 cursor-pointer"
+          >
+            Customize your feed
+          </button>
         </p>
 
         <Question questions={questions} user={user} />
