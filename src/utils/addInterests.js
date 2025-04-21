@@ -6,7 +6,7 @@ import {
   addDoc,
 } from "firebase/firestore";
 
-export default async function AddToInterests(technology, userId) {
+export default async function AddToInterests(technology, userId, type) {
   const db = getFirestore();
   if (!userId) {
     console.log("User is not signed in.");
@@ -14,7 +14,7 @@ export default async function AddToInterests(technology, userId) {
   }
 
   try {
-    const technologysRef = collection(doc(db, "users", userId), "interests");
+    const technologysRef = collection(doc(db, "users", userId), type);
     const technologysSnapshot = await getDocs(technologysRef);
 
     const existingTech = technologysSnapshot.docs.map(

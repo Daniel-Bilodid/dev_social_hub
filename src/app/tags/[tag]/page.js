@@ -24,7 +24,7 @@ const TagPage = ({ params }) => {
 
   useEffect(() => {
     if (addInterestHasRun.current) return;
-    AddToInterests(tag, user?.id);
+    AddToInterests(tag, user?.id, "interests");
     addInterestHasRun.current = true;
   }, [tag, user?.id]);
 

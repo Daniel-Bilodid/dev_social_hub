@@ -5,7 +5,6 @@ import PropTypes from "prop-types";
 export default function Modal({ children, isOpen, onClose }) {
   const elRef = useRef(null);
 
-  // Создаем div только на клиенте
   if (elRef.current === null && typeof document !== "undefined") {
     elRef.current = document.createElement("div");
   }

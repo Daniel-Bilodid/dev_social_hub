@@ -12,6 +12,8 @@ import ToggleButton from "@mui/material/ToggleButton";
 import ToggleButtonGroup from "@mui/material/ToggleButtonGroup";
 import Box from "@mui/material/Box";
 import TextField from "@mui/material/TextField";
+import Stack from "@mui/material/Stack";
+import Button from "@mui/material/Button";
 
 export default function Home() {
   const { userId } = useAuth();
@@ -19,6 +21,7 @@ export default function Home() {
   const [questions, setQuestions] = useState([]);
   const [isModalOpen, setModalOpen] = useState(false);
   const [alignment, setAlignment] = React.useState("Wathced tags");
+  const [tagName, setTagName] = useState("");
   const { user } = useUser();
   const handleChange = (event, newAlignment) => {
     setAlignment(newAlignment);
@@ -107,19 +110,32 @@ export default function Home() {
             </ToggleButton>
             <ToggleButton value="Ignored tags">Ignored tags</ToggleButton>
           </ToggleButtonGroup>
-
-          <Box
-            component="form"
-            sx={{ "& > :not(style)": { m: 1, width: "25ch" } }}
-            noValidate
-            autoComplete="off"
-          >
-            <TextField
-              id="outlined-basic"
-              label="Find a tag by name"
-              variant="outlined"
-            />
-          </Box>
+          <div>123</div>
+          <div className="max-w-[536px] w-full ">
+            <div className="flex items-center gap-5">
+              <Box
+                component="form"
+                sx={{ flexGrow: 1 }}
+                noValidate
+                autoComplete="off"
+              >
+                <TextField
+                  id="outlined-basic"
+                  label="Find a tag by name"
+                  variant="outlined"
+                  fullWidth
+                  onChange={(e) => setTagName(e.target.value)}
+                  value={tagName}
+                />
+              </Box>
+              <Stack spacing={2} direction="row">
+                <Button className="w-[46px] h-[46px]" variant="contained">
+                  Add
+                </Button>
+              </Stack>
+            </div>
+          </div>
+          <div className="absolute bottom-[-30px]">{tagName}</div>
         </Modal>
         <Question questions={questions} user={user} />
       </div>

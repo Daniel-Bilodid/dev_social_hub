@@ -44,7 +44,7 @@ const QuestionPage = () => {
 
   useEffect(() => {
     if (!usersQuestions) return;
-    AddToInterests(usersQuestions.technology, user?.id);
+    AddToInterests(usersQuestions.technology, user?.id, "interests");
   }, [usersQuestions]);
 
   return (
