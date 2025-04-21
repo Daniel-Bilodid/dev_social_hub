@@ -17,7 +17,7 @@ function SearchTags({ tags, setFilteredTags }) {
     <input
       type="text"
       placeholder="Search tags..."
-      className="border p-2 rounded"
+      className="border p-2 rounded w-full"
       onChange={(e) => handleSearch(e)}
     />
   );

@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useUser } from "@clerk/clerk-react";
 import Link from "next/link";
 import useTechnologies from "@/hooks/useTechnologies";
@@ -14,6 +14,9 @@ import Box from "@mui/material/Box";
 import TextField from "@mui/material/TextField";
 import Stack from "@mui/material/Stack";
 import Button from "@mui/material/Button";
+import { getTags } from "@/utils/getTags";
+import SearchTags from "@/components/SearchTags/SearchTags";
+import AddToInterests from "@/utils/addInterests";
 
 export default function Home() {
   const { userId } = useAuth();
@@ -23,6 +26,30 @@ export default function Home() {
   const [alignment, setAlignment] = React.useState("Wathced tags");
   const [tagName, setTagName] = useState("");
   const { user } = useUser();
+  const addWatchedHasRun = useRef(false);
+
+  const [tags, setTags] = useState([]);
+  const [selectedTag, setSelectedTag] = useState("");
+  useEffect(() => {
+    const fetchTags = async () => {
+      const fetchedTags = await getTags();
+
+      const tagValues = fetchedTags.map((tag) => tag.value);
+
+      setTags(tagValues);
+
+      console.log("tags", fetchedTags);
+    };
+    fetchTags();
+  }, []);
+
+  const [filteredTags, setFilteredTags] = useState([]);
+  useEffect(() => {
+    if (addWatchedHasRun.current) return;
+    AddToInterests(selectedTag, user?.id, "watched");
+    addWatchedHasRun.current = true;
+  }, [selectedTag, user?.id]);
+
   const handleChange = (event, newAlignment) => {
     setAlignment(newAlignment);
   };
@@ -38,12 +65,13 @@ export default function Home() {
       console.error("Error fetching interests:", error);
     }
   };
+
   useEffect(() => {
     if (userId) {
       fetchInterests();
     }
   }, [userId]);
-  console.log("interests before", interests);
+
   const technologies = useTechnologies(interests);
 
   useEffect(() => {
@@ -64,9 +92,6 @@ export default function Home() {
     }
   }, [technologies]);
 
-  console.log("questions", questions);
-  console.log("technologies", technologies);
-  console.log("interests", interests);
   return (
     <div>
       <div className="flex justify-between">
@@ -112,21 +137,14 @@ export default function Home() {
           </ToggleButtonGroup>
           <div>123</div>
           <div className="max-w-[536px] w-full ">
-            <div className="flex items-center gap-5">
+            <div className="flex items-center gap-5 ">
               <Box
                 component="form"
                 sx={{ flexGrow: 1 }}
                 noValidate
                 autoComplete="off"
               >
-                <TextField
-                  id="outlined-basic"
-                  label="Find a tag by name"
-                  variant="outlined"
-                  fullWidth
-                  onChange={(e) => setTagName(e.target.value)}
-                  value={tagName}
-                />
+                <SearchTags tags={tags} setFilteredTags={setFilteredTags} />
               </Box>
               <Stack spacing={2} direction="row">
                 <Button className="w-[46px] h-[46px]" variant="contained">
@@ -135,7 +153,17 @@ export default function Home() {
               </Stack>
             </div>
           </div>
-          <div className="absolute bottom-[-30px]">{tagName}</div>
+          <ul className="max-w-[452px] absolute mt-[40px] max-h-40 w-full m overflow-y-auto bg-[#243642] rounded shadow-md z-50">
+            {filteredTags.map((tag) => (
+              <li
+                key={tag}
+                onClick={() => console.log(tag)}
+                className="px-4 py-2 hover:bg-gray-800 cursor-pointer"
+              >
+                {tag}
+              </li>
+            ))}
+          </ul>
         </Modal>
         <Question questions={questions} user={user} />
       </div>
