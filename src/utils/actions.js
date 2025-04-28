@@ -5,6 +5,7 @@ import {
   doc,
   query,
   where,
+  deleteDoc,
 } from "firebase/firestore";
 
 export default async function getFavorites(userId) {
@@ -56,5 +57,28 @@ export async function getInterests(userId, type) {
   } catch (error) {
     console.error(`Error getting ${type}:`, error);
     return [];
+  }
+}
+
+export async function deleteInterests(userId, type, tech) {
+  const db = getFirestore();
+  try {
+    const colRef = collection(db, "users", userId, type);
+    const q = query(colRef, where("technology", "==", tech));
+    const querySnapshot = await getDocs(q);
+
+    if (querySnapshot.empty) {
+      console.log("Document not found.");
+      return;
+    }
+
+    await Promise.all(
+      querySnapshot.docs.map((docSnap) => {
+        const docRef = doc(db, "users", userId, type, docSnap.id);
+        return deleteDoc(docRef);
+      })
+    );
+  } catch (error) {
+    console.error("Error:", error);
   }
 }
