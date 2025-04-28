@@ -20,17 +20,17 @@ export default async function AddToInterests(technology, userId, type) {
     const existingTech = technologysSnapshot.docs.map(
       (doc) => doc.data().technology
     );
-    console.log("Existing technologies in interests:", existingTech);
+    console.log(`Existing technologies in ${type}:`, existingTech);
     let newTech = [];
 
     if (Array.isArray(technology)) {
       newTech = technology.filter((tech) => !existingTech.includes(tech));
 
       if (newTech.length === 0) {
-        console.log("Technology already in interests.");
+        console.log(`Technology already in ${type}.`);
         return;
       }
-      console.log("Adding new technologies to interests:", newTech);
+      console.log(`Adding new technologies to ${type}:`, newTech);
       await Promise.all(
         newTech.map((tech) =>
           addDoc(technologysRef, {
@@ -40,13 +40,13 @@ export default async function AddToInterests(technology, userId, type) {
           })
         )
       );
-      console.log("Added to interests.");
+      console.log(`Added ${type}.`);
     } else {
       const alreadyInInterests = technologysSnapshot.docs.some(
         (doc) => doc.data().technology === technology
       );
       if (alreadyInInterests) {
-        console.log("Technology already in interests.");
+        console.log(`Technology already in ${type}.`);
         return;
       }
 
@@ -55,7 +55,7 @@ export default async function AddToInterests(technology, userId, type) {
         userId,
         createdAt: new Date(),
       });
-      console.log("Added to interests.");
+      console.log(`Added to ${type}.`);
     }
   } catch (error) {
     console.error("Error adding to interests:", error);

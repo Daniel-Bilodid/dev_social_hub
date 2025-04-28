@@ -33,11 +33,11 @@ export default async function getFavorites(userId) {
   }
 }
 
-export async function getInterests(userId) {
+export async function getInterests(userId, type) {
   const db = getFirestore();
 
   try {
-    const interestsRef = collection(doc(db, "users", userId), "interests");
+    const interestsRef = collection(doc(db, "users", userId), type);
 
     const interestsQuery = query(interestsRef, where("userId", "==", userId));
     const interestsSnapshot = await getDocs(interestsQuery);
@@ -51,10 +51,10 @@ export async function getInterests(userId) {
       id: doc.id,
       ...doc.data(),
     }));
-    console.log("All interests fetched:", allIntersts);
+    console.log(`All ${type} fetched:`, allIntersts);
     return allIntersts;
   } catch (error) {
-    console.error("Error getting interests:", error);
+    console.error(`Error getting ${type}:`, error);
     return [];
   }
 }
