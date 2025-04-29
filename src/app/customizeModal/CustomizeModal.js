@@ -34,42 +34,54 @@ export default function CustomizeModal({
   useEffect(() => {
     if (customTag && customTag !== "" && type === "watched") {
       AddToInterests(customTag, user?.id, "watched");
+      if (ignored.includes(customTag)) {
+        console.log("yes");
+        onDeleteInterest(userId, "ignored", customTag);
+      }
     } else {
       AddToInterests(customTag, user?.id, "ignored");
+      if (watched.includes(customTag)) {
+        onDeleteInterest(userId, "watched", customTag);
+      }
     }
   }, [customTag]);
 
-  const fetchedWatched = async () => {
-    try {
-      const watchedData = await getInterests(userId, "watched");
-      console.log("Fetched watched Data:", watchedData);
-      const sortedWatched = watchedData.map((watched) => watched.technology);
-      setWatched(sortedWatched);
-    } catch (error) {
-      console.error("Error fetching watched:", error);
-    }
-  };
+  useEffect(() => {
+    const fetchedWatched = async () => {
+      try {
+        const watchedData = await getInterests(userId, "watched");
 
-  const fetchedIgnored = async () => {
-    try {
-      const ignoredData = await getInterests(userId, "ignored");
-      console.log("Fetched ignored Data:", ignoredData);
-      const sortedIgnored = ignoredData.map((ignored) => ignored.technology);
-      setIgnored(sortedIgnored);
-    } catch (error) {
-      console.error("Error fetching ignored:", error);
+        const sortedWatched = watchedData.map((watched) => watched.technology);
+
+        setWatched(sortedWatched);
+      } catch (error) {
+        console.error("Error fetching watched:", error);
+      }
+    };
+    if (userId) {
+      fetchedWatched();
     }
-  };
+  }, [watched, userId]);
+
+  useEffect(() => {
+    const fetchedIgnored = async () => {
+      try {
+        const ignoredData = await getInterests(userId, "ignored");
+        console.log("Fetched ignored Data:", ignoredData);
+        const sortedIgnored = ignoredData.map((ignored) => ignored.technology);
+        setIgnored(sortedIgnored);
+      } catch (error) {
+        console.error("Error fetching ignored:", error);
+      }
+    };
+    if (userId) {
+      fetchedIgnored();
+    }
+  }, [ignored, userId]);
   const onDeleteInterest = async (tech) => {
     deleteInterests(userId, type, tech);
   };
-
-  useEffect(() => {
-    if (userId) {
-      fetchedWatched();
-      fetchedIgnored();
-    }
-  }, [userId]);
+  const list = type === "watched" ? watched : ignored;
 
   return (
     <>
@@ -95,27 +107,22 @@ export default function CustomizeModal({
           </ToggleButton>
         </ToggleButtonGroup>
 
-        <div className="max-w-[536px] w-full ">
-          <ul className="flex flex-wrap gap-2 max-w-[300px] w-full ">
-            {type === "watched"
-              ? watched.map((item, index) => (
-                  <li
-                    className="p-2 m-2 ml-0 mr-0 bg-[#0e1b2b] rounded-[10px] flex gap-2"
-                    key={index}
-                  >
-                    {item}
-                    <div onClick={() => onDeleteInterest(item)}>X</div>
-                  </li>
-                ))
-              : ignored.map((item, index) => (
-                  <li
-                    className="p-2 m-2 ml-0 mr-0 bg-[#0e1b2b] rounded-[10px] flex gap-2"
-                    key={index}
-                  >
-                    {item}
-                    <div onClick={() => onDeleteInterest(item)}>X</div>
-                  </li>
-                ))}
+        <div className="max-w-[536px] w-full mt-2">
+          <ul className="flex flex-wrap gap-2 max-w-[536px] w-full mb-2">
+            {list.map((item, index) => (
+              <li
+                className="p-2 ml-0 mr-0 bg-[#0e1b2b] rounded-[10px] flex gap-2"
+                key={index}
+              >
+                {item}
+                <div
+                  className="cursor-pointer"
+                  onClick={() => onDeleteInterest(item)}
+                >
+                  X
+                </div>
+              </li>
+            ))}
           </ul>
           <div className="flex items-center gap-5 ">
             <Box

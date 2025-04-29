@@ -63,7 +63,7 @@ export default function Home() {
     };
 
     fetchInterests();
-  }, [userId, watched]);
+  }, [userId, watched, ignored]);
 
   console.log("interest", interests);
 
