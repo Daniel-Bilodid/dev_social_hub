@@ -20,16 +20,19 @@ export default function CustomizeModal({
   tags,
   filteredTags,
   setFilteredTags,
+  ignored,
+  setIgnored,
+  watched,
+  setWatched,
 }) {
   const [customTag, setCustomTag] = useState("");
-  const [watched, setWatched] = useState([]);
-  const [ignored, setIgnored] = useState([]);
+
   const [type, setType] = useState("watched");
   const { user } = useUser();
   const { userId } = useAuth();
 
   useEffect(() => {
-    if (customTag && type === "watched") {
+    if (customTag && customTag !== "" && type === "watched") {
       AddToInterests(customTag, user?.id, "watched");
     } else {
       AddToInterests(customTag, user?.id, "ignored");
@@ -106,10 +109,11 @@ export default function CustomizeModal({
                 ))
               : ignored.map((item, index) => (
                   <li
-                    className="p-2 m-2 ml-0 mr-0 bg-[#0e1b2b] rounded-[10px]"
+                    className="p-2 m-2 ml-0 mr-0 bg-[#0e1b2b] rounded-[10px] flex gap-2"
                     key={index}
                   >
                     {item}
+                    <div onClick={() => onDeleteInterest(item)}>X</div>
                   </li>
                 ))}
           </ul>

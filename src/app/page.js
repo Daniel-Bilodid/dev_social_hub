@@ -17,6 +17,8 @@ export default function Home() {
   const { userId } = useAuth();
   const [interests, setInterests] = useState([]);
   const [questions, setQuestions] = useState([]);
+  const [ignored, setIgnored] = useState([]);
+  const [watched, setWatched] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [alignment, setAlignment] = React.useState("Wathced tags");
 
@@ -48,24 +50,22 @@ export default function Home() {
   const handleChange = (event, newAlignment) => {
     setAlignment(newAlignment);
   };
-  const fetchInterests = async () => {
-    try {
-      const interestsData = await getInterests(userId, "interests");
-      console.log("Fetched interests:", interestsData);
-      const sortedInterests = interestsData.map(
-        (interest) => interest.technology
-      );
-      setInterests(sortedInterests);
-    } catch (error) {
-      console.error("Error fetching interests:", error);
-    }
-  };
-
   useEffect(() => {
-    if (userId) {
-      fetchInterests();
-    }
-  }, [userId]);
+    const fetchInterests = async () => {
+      try {
+        const interestsData = await getInterests(userId, "interests");
+        const sortedInterests = interestsData.map((i) => i.technology);
+        const uniqueInterests = [...new Set([...sortedInterests, ...watched])];
+        setInterests(uniqueInterests.filter((item) => !ignored.includes(item)));
+      } catch (err) {
+        console.error(err);
+      }
+    };
+
+    fetchInterests();
+  }, [userId, watched]);
+
+  console.log("interest", interests);
 
   const technologies = useTechnologies(interests);
 
@@ -86,6 +86,9 @@ export default function Home() {
       setQuestions(filtered);
     }
   }, [technologies]);
+
+  console.log("questions", questions);
+  console.log("types", watched);
 
   return (
     <div>
@@ -122,6 +125,10 @@ export default function Home() {
           tags={tags}
           filteredTags={filteredTags}
           setFilteredTags={setFilteredTags}
+          ignored={ignored}
+          setIgnored={setIgnored}
+          watched={watched}
+          setWatched={setWatched}
         />
         <Question questions={questions} user={user} />
       </div>
