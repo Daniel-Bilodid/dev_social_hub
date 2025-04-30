@@ -55,7 +55,9 @@ export default function Home() {
       try {
         const interestsData = await getInterests(userId, "interests");
         const sortedInterests = interestsData.map((i) => i.technology);
+
         const uniqueInterests = [...new Set([...sortedInterests, ...watched])];
+
         setInterests(uniqueInterests.filter((item) => !ignored.includes(item)));
       } catch (err) {
         console.error(err);

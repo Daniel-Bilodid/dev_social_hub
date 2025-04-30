@@ -11,6 +11,7 @@ import AddToInterests from "@/utils/addInterests";
 import { useUser } from "@clerk/clerk-react";
 import { deleteInterests, getInterests } from "@/utils/actions";
 import { useAuth } from "@clerk/nextjs";
+import isEqual from "lodash.isequal";
 
 export default function CustomizeModal({
   isModalOpen,
@@ -31,56 +32,54 @@ export default function CustomizeModal({
   const { user } = useUser();
   const { userId } = useAuth();
 
+  const fetchWatched = async () => {
+    const watchedData = await getInterests(userId, "watched");
+    const sorted = watchedData.map((item) => item.technology);
+    setWatched(sorted);
+  };
+
+  const fetchIgnored = async () => {
+    const ignoredData = await getInterests(userId, "ignored");
+    const sorted = ignoredData.map((item) => item.technology);
+    setIgnored(sorted);
+  };
+
   useEffect(() => {
-    if (customTag && customTag !== "" && type === "watched") {
-      AddToInterests(customTag, user?.id, "watched");
-      if (ignored.includes(customTag)) {
-        console.log("yes");
-        onDeleteInterest(userId, "ignored", customTag);
+    if (!userId) return;
+    fetchWatched();
+    fetchIgnored();
+  }, [userId]);
+
+  useEffect(() => {
+    const update = async () => {
+      if (!customTag) return;
+
+      if (type === "watched") {
+        await AddToInterests(customTag, user?.id, "watched");
+        if (ignored.includes(customTag)) {
+          await onDeleteInterest("ignored", customTag);
+        }
+        await fetchWatched();
+      } else {
+        await AddToInterests(customTag, user?.id, "ignored");
+        if (watched.includes(customTag)) {
+          await onDeleteInterest("watched", customTag);
+        }
+        await fetchIgnored();
       }
-    } else {
-      AddToInterests(customTag, user?.id, "ignored");
-      if (watched.includes(customTag)) {
-        onDeleteInterest(userId, "watched", customTag);
-      }
-    }
+    };
+    update();
   }, [customTag]);
 
-  useEffect(() => {
-    const fetchedWatched = async () => {
-      try {
-        const watchedData = await getInterests(userId, "watched");
-
-        const sortedWatched = watchedData.map((watched) => watched.technology);
-
-        setWatched(sortedWatched);
-      } catch (error) {
-        console.error("Error fetching watched:", error);
-      }
-    };
-    if (userId) {
-      fetchedWatched();
+  const onDeleteInterest = async (interestType, tech) => {
+    await deleteInterests(userId, interestType, tech);
+    if (interestType === "watched") {
+      await fetchWatched();
+    } else {
+      await fetchIgnored();
     }
-  }, [watched, userId]);
-
-  useEffect(() => {
-    const fetchedIgnored = async () => {
-      try {
-        const ignoredData = await getInterests(userId, "ignored");
-        console.log("Fetched ignored Data:", ignoredData);
-        const sortedIgnored = ignoredData.map((ignored) => ignored.technology);
-        setIgnored(sortedIgnored);
-      } catch (error) {
-        console.error("Error fetching ignored:", error);
-      }
-    };
-    if (userId) {
-      fetchedIgnored();
-    }
-  }, [ignored, userId]);
-  const onDeleteInterest = async (tech) => {
-    deleteInterests(userId, type, tech);
   };
+
   const list = type === "watched" ? watched : ignored;
 
   return (
@@ -93,16 +92,10 @@ export default function CustomizeModal({
           onChange={handleChange}
           aria-label="Platform"
         >
-          <ToggleButton
-            onClick={() => console.log(setType("watched"))}
-            value="Watched tags"
-          >
+          <ToggleButton onClick={() => setType("watched")} value="Watched tags">
             Watched tags
           </ToggleButton>
-          <ToggleButton
-            value="Ignored tags"
-            onClick={() => console.log(setType("ignored"))}
-          >
+          <ToggleButton value="Ignored tags" onClick={() => setType("ignored")}>
             Ignored tags
           </ToggleButton>
         </ToggleButtonGroup>
@@ -117,7 +110,7 @@ export default function CustomizeModal({
                 {item}
                 <div
                   className="cursor-pointer"
-                  onClick={() => onDeleteInterest(item)}
+                  onClick={() => onDeleteInterest(type, item)}
                 >
                   X
                 </div>
