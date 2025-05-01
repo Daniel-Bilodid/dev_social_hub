@@ -106,7 +106,6 @@ export default function CustomizeModal({
             Ignored tags
           </ToggleButton>
         </ToggleButtonGroup>
-
         <div className="max-w-[536px] w-full mt-2">
           <ul className="flex flex-wrap gap-2 max-w-[536px] w-full mb-2">
             {list.map((item, index) => (
@@ -140,7 +139,10 @@ export default function CustomizeModal({
             </Stack>
           </div>
         </div>
-
+        {console.log("watched", watched)}
+        {console.log("ignored", ignored)}
+        {/* .filter((item) => type === "watched" ? !watched.includes(item) :
+        !ignored.includes(item) ) */}
         <ul className="max-w-[452px] absolute mt-[40px] max-h-40 w-full m overflow-y-auto bg-[#243642] rounded shadow-md z-50">
           {customTags.map((tag) => (
             <li
