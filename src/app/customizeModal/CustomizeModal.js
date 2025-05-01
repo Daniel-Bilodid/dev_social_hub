@@ -19,14 +19,15 @@ export default function CustomizeModal({
   alignment,
   handleChange,
   tags,
-  filteredTags,
-  setFilteredTags,
+  customTags,
+  setCustomTags,
   ignored,
   setIgnored,
   watched,
   setWatched,
 }) {
   const [customTag, setCustomTag] = useState("");
+  const [inputValue, setInputValue] = useState("");
 
   const [type, setType] = useState("watched");
   const { user } = useUser();
@@ -49,6 +50,12 @@ export default function CustomizeModal({
     fetchWatched();
     fetchIgnored();
   }, [userId]);
+
+  useEffect(() => {
+    if (!isModalOpen) {
+      setCustomTags([]);
+    }
+  }, [isModalOpen]);
 
   useEffect(() => {
     const update = async () => {
@@ -124,7 +131,7 @@ export default function CustomizeModal({
               noValidate
               autoComplete="off"
             >
-              <SearchTags tags={tags} setFilteredTags={setFilteredTags} />
+              <SearchTags tags={tags} setCustomTags={setCustomTags} />
             </Box>
             <Stack spacing={2} direction="row">
               <Button className="w-[46px] h-[46px]" variant="contained">
@@ -133,8 +140,9 @@ export default function CustomizeModal({
             </Stack>
           </div>
         </div>
+
         <ul className="max-w-[452px] absolute mt-[40px] max-h-40 w-full m overflow-y-auto bg-[#243642] rounded shadow-md z-50">
-          {filteredTags.map((tag) => (
+          {customTags.map((tag) => (
             <li
               key={tag}
               onClick={() => setCustomTag(tag)}

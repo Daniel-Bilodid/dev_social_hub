@@ -40,7 +40,7 @@ export default function Home() {
     fetchTags();
   }, []);
 
-  const [filteredTags, setFilteredTags] = useState([]);
+  const [customTags, setCustomTags] = useState([]);
   useEffect(() => {
     if (addWatchedHasRun.current) return;
     AddToInterests(selectedTag, user?.id, "watched");
@@ -125,8 +125,8 @@ export default function Home() {
           alignment={alignment}
           handleChange={handleChange}
           tags={tags}
-          filteredTags={filteredTags}
-          setFilteredTags={setFilteredTags}
+          customTags={customTags}
+          setCustomTags={setCustomTags}
           ignored={ignored}
           setIgnored={setIgnored}
           watched={watched}

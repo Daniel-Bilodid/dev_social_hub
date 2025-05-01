@@ -1,16 +1,24 @@
 import React from "react";
 
-function SearchTags({ tags, setFilteredTags }) {
+function SearchTags({ tags, setFilteredTags, setCustomTags }) {
   function handleSearch(e) {
     const query = e.target.value.toLowerCase();
-    if (!query) {
+
+    if (!query && setCustomTags) {
+      setCustomTags([]);
+      return;
+    }
+
+    if (!query && setFilteredTags) {
       setFilteredTags(tags);
+
       return;
     }
 
     const filtered = tags.filter((item) => item.toLowerCase().includes(query));
 
-    setFilteredTags(filtered);
+    if (setFilteredTags) setFilteredTags(filtered);
+    if (setCustomTags) setCustomTags(filtered);
   }
 
   return (
